@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      <link rel="stylesheet" href="styles.css">
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  </head>
+  <body>
+    <table align="center">
+      {% for item in items %}
+      <tr>
+        <td class="c1"><i class="far fa-folder" style="color:grey"></i></td>
+        <td class="c2"><a href="./{{ item.tag_name }}">{{ item.tag_name }}</a></td>
+        <td class="c3">{{ item.finished_at.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+        <td class="c4>{{ item.finished_at.strftime("%H:%M:%S") }}</td>
+        <td class="c5">
+          <span>{{ item.position }}</SPAN>
+        </td>
+        <td class="c6">
+          <span>{{ item.status }}</SPAN>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

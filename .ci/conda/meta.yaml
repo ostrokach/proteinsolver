@@ -1,0 +1,44 @@
+package:
+  name: proteinsolver
+  version: 0.1.0
+
+source:
+  path: ../../
+
+build:
+  script: $PYTHON setup.py install --single-version-externally-managed --record=record.txt
+  number: 0
+  noarch: python
+
+requirements:
+  build:
+    - python
+  run:
+    - python
+    - ruamel_yaml
+    - pytorch >=1.0.1
+    - numpy
+    - scipy
+    - pandas
+    - numba
+
+test:
+  source_files:
+    - setup.cfg
+    - tests
+  requires:
+    - pytest
+    - pytest-cov
+    - hypothesis
+  imports:
+    - proteinsolver
+
+outputs:
+  - name: proteinsolver
+    type: conda
+  - type: wheel
+
+about:
+  home: https://gitlab.com/ostrokach/proteinsolver
+  license: MIT License
+  summary: "Learn to solve constraint satisfaction problems (CSPs) from data."

@@ -1,0 +1,27 @@
+[tool.black]
+line-length = 100
+py36 = true
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | .conda
+)/
+'''
+
+[tool.isort]
+line_length = 100
+skip = 'docs/conf.py,__init__.py,setup.py,.ci,.conda'
+verbose = true
+default_section = 'THIRDPARTY'
+known_first_party = 'proteinsolver'
+multi_line_output = 3
+include_trailing_comma = true

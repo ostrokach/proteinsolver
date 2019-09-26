@@ -1,0 +1,18 @@
+default_context:
+    full_name: Alexey Strokach
+    email: alex.strokach@utoronto.ca
+    git_url: https://gitlab.com
+    git_username: ostrokach
+    anaconda_username: ostrokach
+    pypi_username: ostrokach
+    project_name: proteinsolver
+    project_slug: proteinsolver
+    project_import: proteinsolver
+    project_short_description: Learn to solve constraint satisfaction problems (CSPs) from data.
+    docs_secret_key: ""
+    version: "0.1.0"
+    create_author_file: "y"
+    open_source_license: MIT License
+    _copy_without_render:
+        - docs/output_toggle.tpl
+        - docs/_templates/logo-image.html

@@ -1,0 +1,223 @@
+image: registry.gitlab.com/ostrokach-docker/conda:centos7
+
+stages:
+  - pages
+  - lint
+  - build
+  - test
+  - deploy
+
+# === Variables ===
+
+variables:
+  PACKAGE_VERSION: "0.1.0"
+  DOCS_SECRET_KEY: "FGIDVYN9fMx8qvsyPSKtoLaEucROasB"
+  PYTHON_VERSION: "3.7"
+
+# === Configurations ===
+
+.configure:
+  before_script:
+    # Set conda envs and pkgs dirs
+    - mkdir -p "${CI_PROJECT_DIR}/.conda/envs" "${CI_PROJECT_DIR}/.conda/pkgs"
+    - conda config --add envs_dirs "${CI_PROJECT_DIR}/.conda/envs"
+    - conda config --add pkgs_dirs "${CI_PROJECT_DIR}/.conda/pkgs"
+    - conda config --add channels pytorch
+    # Set conda build dir
+    - mkdir -p "${CI_PROJECT_DIR}/conda-bld"
+    # Fix "FileNotFoundError(2, 'No such file or directory')" error
+    - mkdir -p ~/.conda/envs
+  cache:
+    paths:
+      - .conda
+  except:
+    variables:
+      - $UPDATE_PAGES
+      - $CI_COMMIT_MESSAGE =~ /\[pages\]/i
+
+# === Lint ===
+
+lint:
+  stage: lint
+  extends: .configure
+  script:
+    - conda create -n lint -q "python=${PYTHON_VERSION}" || true
+    - source activate lint
+    - pip install isort[pyproject] flake8 mypy black
+    - python -m isort -p ${CI_PROJECT_NAME} -c
+    - python -m flake8
+    - python -m black --config pyproject.toml --check .
+    # MyPy does not support namespace packages until this issue gets resolved:
+    # https://github.com/python/mypy/issues/1645
+    - python -m mypy -p ${CI_PROJECT_NAME} || true
+
+# === Build ===
+
+build:
+  stage: build
+  extends: .configure
+  script:
+    - cd "${CI_PROJECT_DIR}/.ci/conda"
+    - conda build .
+      --no-test
+      --python $PYTHON_VERSION
+      --output-folder "$CI_PROJECT_DIR/conda-bld"
+  artifacts:
+    paths:
+      - conda-bld
+
+# === Test ===
+
+test:
+  stage: test
+  extends: .configure
+  script:
+    # Restore built packages
+    - cp -r $CI_PROJECT_DIR/conda-bld/* /opt/conda/conda-bld/
+    - conda index /opt/conda/conda-bld/
+    # Create conda environment for testing
+    - conda create -n test -q --use-local
+      "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 || true
+    - source activate test
+    # Install pip dependencies
+    - pip install --verbose --no-cache-dir torch-scatter
+    - pip install --verbose --no-cache-dir torch-sparse
+    - pip install --verbose --no-cache-dir torch-cluster
+    - pip install --verbose --no-cache-dir torch-spline-conv (optional)
+    - pip install torch-geometric
+    # Run tests
+    - PKG_INSTALL_DIR=$(python -c "import proteinsolver; print(proteinsolver.__path__[0])")
+    - echo ${PKG_INSTALL_DIR}
+    - python -m pytest
+      -c setup.cfg
+      --cov="${PKG_INSTALL_DIR}"
+      --color=yes
+      --junitxml=pytest.xml
+      tests/
+    - sed -i "s|${PKG_INSTALL_DIR}/||g" .coverage
+  coverage: /^TOTAL.* (\d+\%)/
+  dependencies:
+    - build
+  artifacts:
+    paths:
+      - environment-py${PYTHON_VERSION/./}.yml
+      - .ci/conda/.coverage
+    reports:
+      junit: pytest.xml
+  allow_failure: true
+
+# === Docs ===
+
+docs:
+  stage: test
+  extends: .configure
+  script:
+    # Restore built packages
+    - cp -r $CI_PROJECT_DIR/conda-bld/* /opt/conda/conda-bld/
+    - conda index /opt/conda/conda-bld/
+    # Create conda environment for testing
+    - conda create -n test -q --use-local
+      "python=${PYTHON_VERSION}" $CI_PROJECT_NAME nbconvert ipython ipykernel pandoc || true
+    - source activate test
+    - pip install -q sphinx sphinx_rtd_theme recommonmark nbsphinx coverage
+    # Build docs
+    - sphinx-build ${CI_PROJECT_DIR}/docs public
+    # Coverage
+    - ls -al
+    - coverage report || true
+    - coverage html || true
+    - mv htmlcov public/ || true
+  coverage: /^TOTAL.* (\d+\%)/
+  dependencies:
+    - build
+  artifacts:
+    paths:
+      - public
+    when: always
+
+# === Deploy ===
+
+deploy:
+  stage: deploy
+  extends: .configure
+  script:
+    # Create conda environment
+    - conda create -n deploy -q "python=${PYTHON_VERSION}" twine || true
+    - source activate deploy
+    # Rename wheels from `*-linux_x86_64.whl` to `*-manylinux1_x86_64.whl`
+    # so that they can be uploaded to PyPI.
+    - for i in $CI_PROJECT_DIR/conda-bld/linux-64/*.whl ; do
+      echo $i ;
+      if [[ $i = *"-linux_x86_64.whl" ]]; then
+      mv "${i}" "${i%%-linux_x86_64.whl}-manylinux1_x86_64.whl" ;
+      fi ;
+      done
+    # Development releases go to the Anaconda dev channel
+    - if [[ ${PACKAGE_VERSION} = *"dev"* ]] ; then
+      anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/linux-64/*.tar.bz2 -u ostrokach --label dev --force --no-progress ;
+      fi
+    # Tagged releases go to the Anaconda and PyPI main channels
+    - if [[ -n ${CI_COMMIT_TAG} ]] ; then
+      anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/linux-64/*.tar.bz2 -u ostrokach --no-progress ;
+      twine upload $CI_PROJECT_DIR/conda-bld/linux-64/*.whl || true ;
+      fi
+  dependencies:
+    - build
+
+# === Pages ===
+
+.pages:
+  stage: deploy
+  before_script:
+    - sudo yum update -y -q
+    - sudo yum install -y -q unzip
+    - pip install jinja2 python-gitlab
+  script:
+    # Set environment variables
+    - export OUTPUT_DIR="./public/${DOCS_SECRET_KEY}"
+    # Add current docs to public
+    - mv -f public latest || true
+    - mkdir -p ${OUTPUT_DIR}
+    - mv -f latest ${OUTPUT_DIR}/latest || true
+    - if [[ -n ${CI_TAG_NAME} && -d ${OUTPUT_DIR}/latest ]] ; then
+      cp -r ${OUTPUT_DIR}/latest ${OUTPUT_DIR}/${CI_TAG_NAME} ;
+      fi
+    # Download all previous docs
+    - python .ci/pages/download_docs.py
+      --project-id ${CI_PROJECT_ID}
+      --job-name docs
+      --private-token ${CI_DOCS_TOKEN}
+      --output-dir ${OUTPUT_DIR}
+  dependencies:
+    - docs
+  artifacts:
+    paths:
+      - public
+
+pages:
+  stage: pages
+  before_script:
+    - sudo yum update -y -q
+    - sudo yum install -y -q unzip
+    - pip install jinja2 python-gitlab
+  script:
+    # Set environment variables
+    - export OUTPUT_DIR="./public/${DOCS_SECRET_KEY}"
+    - mkdir -p ${OUTPUT_DIR}
+    # Download all previous docs
+    - python .ci/pages/download_docs.py
+      --project-id ${CI_PROJECT_ID}
+      --job-name docs
+      --private-token ${CI_DOCS_TOKEN}
+      --output-dir ${OUTPUT_DIR}
+    # Whitepaper
+    - mkdir -p ${OUTPUT_DIR}
+    - cp -r report ${OUTPUT_DIR}
+    - mv ${OUTPUT_DIR}/report/README.html ${OUTPUT_DIR}/report/index.html
+  artifacts:
+    paths:
+      - public
+  only:
+    variables:
+      - $UPDATE_PAGES
+      - $CI_COMMIT_MESSAGE =~ /\[pages\]/i
