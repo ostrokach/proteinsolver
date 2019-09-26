@@ -20,7 +20,7 @@ class SudokuDataset2(InMemoryDataset):
     ) -> None:
         """Create new SudokuDataset."""
         self.data_url = (
-            f"https://storage.googleapis.com/deep-protein-gen/sudoku/{subset}.csv.gz"
+            f"https://storage.googleapis.com/deep-protein-gen/sudoku/sudoku_{subset}.csv.gz"
             if data_url is None
             else data_url
         )
