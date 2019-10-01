@@ -79,7 +79,7 @@ target/
 .ipynb_checkpoints
 
 # Saved models
-notebooks
+notebooks/**
 !notebooks/*.ipynb
 
 report/index.html
