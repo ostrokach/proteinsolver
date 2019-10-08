@@ -221,6 +221,7 @@ def row_to_data(tup) -> Data:
     edge_index, edge_attr = remove_nans(edge_index, edge_attr)
 
     data = Data(x=seq, edge_index=edge_index, edge_attr=edge_attr)
+    data = data.coalesce()
 
     assert not data.contains_self_loops()
     assert data.is_coalesced()
