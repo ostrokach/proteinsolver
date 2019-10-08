@@ -1,7 +1,7 @@
 import os.path as osp
 import pickle
 from pathlib import Path
-from typing import Iterator, List, Mapping
+from typing import Iterator, List, Mapping, Union
 
 import pyarrow.parquet as pq
 import torch
@@ -181,7 +181,7 @@ def transform_edge_attr(data):
 
 
 def iter_parquet_file(
-    filename: Path, extra_columns: List[str], extra_column_renames: Mapping[str, str]
+    filename: Union[str, Path], extra_columns: List[str], extra_column_renames: Mapping[str, str]
 ) -> Iterator:
     columns = (
         ["sequence", "residue_idx_1_corrected", "residue_idx_2_corrected", "distances"]

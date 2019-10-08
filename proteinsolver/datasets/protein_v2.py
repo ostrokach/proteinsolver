@@ -5,7 +5,6 @@ import torch_geometric.transforms as T
 from torch_geometric.data import Dataset
 
 from proteinsolver import settings
-from proteinsolver.datasets import download_url
 from proteinsolver.datasets.protein import iter_parquet_file, row_to_data, transform_edge_attr
 
 
@@ -15,7 +14,6 @@ class ProteinDataset2(Dataset):
         root,
         subset: Optional[str] = None,
         data_url: Optional[str] = None,
-        make_local_copy: bool = False,
         transform=None,
         pre_transform=None,
         pre_filter=None,
@@ -27,58 +25,33 @@ class ProteinDataset2(Dataset):
             self.data_url = f"{settings.data_url}/deep-protein-gen/{file_name}"
         else:
             self.data_url = data_url
-        self.make_local_copy = make_local_copy
         self._raw_file_names = [self.data_url.rsplit("/")[-1]]
-        pre_transform = T.Compose(
-            [transform_edge_attr] + ([pre_transform] if pre_transform is not None else [])
+        transform = T.Compose(
+            [transform_edge_attr] + ([transform] if transform is not None else [])
         )
         super().__init__(root, transform, pre_transform, pre_filter)
-        #
-        self.file = pq.ParquetFile(self.input_file_path)
-        self.data_iterator = iter_parquet_file(self.input_file_path, [], {})
-        self.reset_parameters()
+        self.file = pq.ParquetFile(self.data_url)
+        self.reset()
 
-    def reset_parameters(self):
+    def reset(self):
+        self.data_iterator = iter_parquet_file(self.data_url, [], {})
         self.prev_index = None
-        self.row_group = None
-        self.data_chunk_idx = None
-
-    @property
-    def raw_file_names(self):
-        return self._raw_file_names
-
-    def download(self):
-        download_url(self.data_url, self.raw_dir)
 
     def _download(self):
-        if self.make_local_copy:
-            return super()._download()
-
-    @property
-    def processed_file_names(self):
-        return []
+        pass
 
     def _process(self):
         pass
 
-    @property
-    def input_file_path(self):
-        if self.make_local_copy:
-            return self.raw_paths[0]
-        else:
-            return self.data_url
-
     def __len__(self):
+        # Warning: This over-estimates the number of data points because some rows are malformed
         return self.file.metadata.num_rows
 
     def get(self, idx):
         if self.prev_index is None:
             assert idx == 0, idx
-            self.row_group = 0
-            self.data_chunk_idx = 0
         else:
             assert self.prev_index == idx - 1
-            self.data_chunk_idx += 1
         self.prev_index = idx
 
         while True:
