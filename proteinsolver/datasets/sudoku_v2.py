@@ -12,14 +12,7 @@ from proteinsolver.utils import construct_solved_sudoku, gen_sudoku_graph, str_t
 
 class SudokuDataset4(Dataset):
     def __init__(
-        self,
-        root,
-        subset: Optional[str] = None,
-        data_url: Optional[str] = None,
-        make_local_copy: bool = False,
-        transform=None,
-        pre_transform=None,
-        pre_filter=None,
+        self, root, subset=None, data_url=None, transform=None, pre_transform=None, pre_filter=None
     ) -> None:
         """Create new SudokuDataset."""
         if data_url is None:
@@ -28,38 +21,27 @@ class SudokuDataset4(Dataset):
             self.data_url = f"{settings.data_url}/deep-protein-gen/sudoku_difficult/{file_name}"
         else:
             self.data_url = data_url
-        self._raw_file_names = [self.data_url.rsplit("/")[-1]]
         self._edge_index, _ = gen_sudoku_graph()
         super().__init__(root, transform, pre_transform, pre_filter)
+        self.file = pq.ParquetFile(self.data_url)
+        self.reset()
 
-        #
-        self.file = pq.ParquetFile(self.raw_paths[0])
-        self.reset_parameters()
-
-    def reset_parameters(self):
+    def reset(self) -> None:
         self.prev_index = None
         self.row_group = None
         self.data_chunk = None
         self.data_chunk_idx = None
 
-    @property
-    def raw_file_names(self):
-        return self._raw_file_names
+    def _download(self):
+        pass
 
-    @property
-    def processed_file_names(self):
-        return []
-
-    def download(self):
-        download_url(self.data_url, self.raw_dir)
-
-    def process(self):
+    def _process(self):
         pass
 
     def __len__(self):
         return self.file.metadata.num_rows
 
-    def _read_row_group(self, row_group):
+    def _read_row_group(self, row_group: int):
         df = self.file.read_row_group(row_group).to_pandas(integer_object_nulls=True)
 
         data_list = []
@@ -68,14 +50,11 @@ class SudokuDataset4(Dataset):
             puzzle = torch.where(puzzle >= 0, puzzle, torch.tensor(9))
             solution = str_to_tensor(tup.solution) - 1
             data = Data(x=puzzle, y=solution)
+            if self.pre_filter is not None:
+                data = self.pre_filter(data)
+            if self.pre_transform is not None:
+                data = self.pre_transform(data)
             data_list.append(data)
-
-        if self.pre_filter is not None:
-            data_list = [data for data in data_list if self.pre_filter(data)]
-
-        if self.pre_transform is not None:
-            data_list = [self.pre_transform(data) for data in data_list]
-
         return data_list
 
     def get(self, idx):
@@ -85,7 +64,7 @@ class SudokuDataset4(Dataset):
             self.data_chunk = self._read_row_group(self.row_group)
             self.data_chunk_idx = 0
         else:
-            assert self.prev_index == idx - 1
+            assert self.prev_index == idx - 1, (self.prev_index, idx)
             self.data_chunk_idx += 1
         self.prev_index = idx
 
