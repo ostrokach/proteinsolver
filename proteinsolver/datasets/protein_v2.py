@@ -2,9 +2,11 @@ from typing import Optional
 
 import pyarrow.parquet as pq
 import torch_geometric.transforms as T
+from torch_geometric.data import Dataset
+
+from proteinsolver import settings
 from proteinsolver.datasets import download_url
 from proteinsolver.datasets.protein import iter_parquet_file, row_to_data, transform_edge_attr
-from torch_geometric.data import Dataset
 
 
 class ProteinDataset2(Dataset):
@@ -13,7 +15,7 @@ class ProteinDataset2(Dataset):
         root,
         subset: Optional[str] = None,
         data_url: Optional[str] = None,
-        make_local_copy: bool = True,
+        make_local_copy: bool = False,
         transform=None,
         pre_transform=None,
         pre_filter=None,
@@ -21,10 +23,8 @@ class ProteinDataset2(Dataset):
         """Create new SudokuDataset."""
         if data_url is None:
             assert subset is not None
-            i = int(subset.split("_")[-1])
-            self.data_url = (
-                f"https://storage.googleapis.com/deep-protein-gen/training_data_rs{i}.parquet"
-            )
+            file_name = f"training_data_rs{int(subset.split('_')[-1])}.parquet"
+            self.data_url = f"{settings.data_url}/deep-protein-gen/{file_name}"
         else:
             self.data_url = data_url
         self.make_local_copy = make_local_copy

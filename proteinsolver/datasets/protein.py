@@ -8,24 +8,25 @@ import torch
 import torch_geometric.transforms as T
 from torch_geometric.data import Data, Dataset, InMemoryDataset
 
+from proteinsolver import settings
 from proteinsolver.datasets import download_url
 from proteinsolver.utils import seq_to_tensor
 
 _data_urls = {
     "train_0": (
-        "https://storage.googleapis.com/deep-protein-gen/processed/training_data_0/"
+        f"{settings.data_url}/deep-protein-gen/processed/training_data_0/"
         "part-00000-a260936c-8c1c-4b93-b9ab-57757dbf29b8-c000.snappy.parquet"
     ),
     "train_1": (
-        "https://storage.googleapis.com/deep-protein-gen/processed/training_data_1/"
+        f"{settings.data_url}/deep-protein-gen/processed/training_data_1/"
         "part-00000-7cab69dd-7eec-4823-8c4b-c355264bca9b-c000.snappy.parquet"
     ),
     "valid": (
-        "https://storage.googleapis.com/deep-protein-gen/processed/validation_data/"
+        f"{settings.data_url}/deep-protein-gen/processed/validation_data/"
         "part-00000-4f535e50-cdf4-4275-b6b3-a3038f24a1a9-c000.snappy.parquet"
     ),
     "test": (
-        "https://storage.googleapis.com/deep-protein-gen/processed/test_data/"
+        f"{settings.data_url}/deep-protein-gen/processed/test_data/"
         "part-00000-ba92a066-6ee2-47dc-883c-fd2044ecaa00-c000.snappy.parquet"
     ),
 }

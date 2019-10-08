@@ -1,12 +1,13 @@
 from typing import Optional
 
 import pandas as pd
-
 import pyarrow.parquet as pq
 import torch
+from torch_geometric.data import Data, Dataset, InMemoryDataset
+
+from proteinsolver import settings
 from proteinsolver.datasets import download_url
 from proteinsolver.utils import construct_solved_sudoku, gen_sudoku_graph, str_to_tensor
-from torch_geometric.data import Data, Dataset, InMemoryDataset
 
 
 class SudokuDataset4(Dataset):
@@ -15,6 +16,7 @@ class SudokuDataset4(Dataset):
         root,
         subset: Optional[str] = None,
         data_url: Optional[str] = None,
+        make_local_copy: bool = False,
         transform=None,
         pre_transform=None,
         pre_filter=None,
@@ -22,10 +24,8 @@ class SudokuDataset4(Dataset):
         """Create new SudokuDataset."""
         if data_url is None:
             assert subset is not None
-            self.data_url = (
-                "https://storage.googleapis.com/deep-protein-gen/sudoku_difficult/"
-                f"{subset.replace('sudoku_', '')}.parquet"
-            )
+            file_name = f"{subset.replace('sudoku_', '')}.parquet"
+            self.data_url = f"{settings.data_url}/deep-protein-gen/sudoku_difficult/{file_name}"
         else:
             self.data_url = data_url
         self._raw_file_names = [self.data_url.rsplit("/")[-1]]
@@ -128,13 +128,14 @@ class SudokuDataset2(InMemoryDataset):
         root,
         subset: Optional[str] = None,
         data_url: Optional[str] = None,
+        make_local_copy: bool = False,
         transform=None,
         pre_transform=None,
         pre_filter=None,
     ) -> None:
         """Create new SudokuDataset."""
         self.data_url = (
-            f"https://storage.googleapis.com/deep-protein-gen/sudoku/sudoku_{subset}.csv.gz"
+            f"{settings.data_url}/deep-protein-gen/sudoku/sudoku_{subset}.csv.gz"
             if data_url is None
             else data_url
         )
@@ -156,6 +157,7 @@ class SudokuDataset2(InMemoryDataset):
 
     def process(self):
         df = pd.read_csv(self.raw_paths[0], index_col=False)
+        df = df.rename(columns={"puzzle": "quizzes", "solution": "solutions"})
 
         data_list = []
         for tup in df.itertuples():
