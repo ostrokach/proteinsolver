@@ -9,3 +9,7 @@
 ## Introduction
 
 `proteinsolver` is a deep neural network which learns to solve (ill-defined) constraint satisfaction problems (CSPs) from training data.
+
+### Environment variables
+
+- `DATAPKG_DATA_DIR` - Location of training and validation data.
