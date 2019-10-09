@@ -27,7 +27,7 @@ class SudokuDataset4(Dataset):
         else:
             self.data_url = data_url
         super().__init__(root, transform, pre_transform, pre_filter)
-        self.sudoku_graph = torch.from_numpy(gen_sudoku_graph_featured()).to_sparse()
+        self.sudoku_graph = torch.from_numpy(gen_sudoku_graph_featured()).to_sparse(2)
         self.file = pq.ParquetFile(self.data_url)
         self.reset()
 
