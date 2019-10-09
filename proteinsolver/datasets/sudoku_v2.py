@@ -7,7 +7,12 @@ from torch_geometric.data import Data, Dataset, InMemoryDataset
 
 from proteinsolver import settings
 from proteinsolver.datasets import download_url
-from proteinsolver.utils import construct_solved_sudoku, gen_sudoku_graph, str_to_tensor
+from proteinsolver.utils import (
+    construct_solved_sudoku,
+    gen_sudoku_graph,
+    gen_sudoku_graph_featured,
+    str_to_tensor,
+)
 
 
 class SudokuDataset4(Dataset):
@@ -21,8 +26,8 @@ class SudokuDataset4(Dataset):
             self.data_url = f"{settings.data_url}/deep-protein-gen/sudoku_difficult/{file_name}"
         else:
             self.data_url = data_url
-        self._edge_index, _ = gen_sudoku_graph()
         super().__init__(root, transform, pre_transform, pre_filter)
+        self.sudoku_graph = torch.from_numpy(gen_sudoku_graph_featured()).to_sparse()
         self.file = pq.ParquetFile(self.data_url)
         self.reset()
 
@@ -74,7 +79,8 @@ class SudokuDataset4(Dataset):
             self.data_chunk_idx = 0
 
         data = self.data_chunk[self.data_chunk_idx]
-        data.edge_index = self._edge_index
+        data.edge_index = self.sudoku_graph.indices
+        data.edge_attr = self.sudoku_graph.values
         return data
 
 
