@@ -79,8 +79,8 @@ class SudokuDataset4(Dataset):
             self.data_chunk_idx = 0
 
         data = self.data_chunk[self.data_chunk_idx]
-        data.edge_index = self.sudoku_graph.indices
-        data.edge_attr = self.sudoku_graph.values
+        data.edge_index = self.sudoku_graph.indices()
+        data.edge_attr = self.sudoku_graph.values()
         return data
 
 
