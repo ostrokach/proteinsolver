@@ -80,12 +80,14 @@ test:
     - conda create -n test -q --use-local
       "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 || true
     - source activate test
-    # Install pip dependencies
-    - pip install --verbose --no-cache-dir torch-scatter
-    - pip install --verbose --no-cache-dir torch-sparse
-    - pip install --verbose --no-cache-dir torch-cluster
-    - pip install --verbose --no-cache-dir torch-spline-conv
+    # Install torch geometric
+    - pip install torch-scatter
+    - pip install torch-sparse
+    - pip install torch-cluster
+    - pip install torch-spline-conv
     - pip install torch-geometric
+    # Install other test depencencies
+    - pip install pytest-cov
     # Run tests
     - PKG_INSTALL_DIR=$(python -c "import proteinsolver; print(proteinsolver.__path__[0])")
     - echo ${PKG_INSTALL_DIR}
