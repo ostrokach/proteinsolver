@@ -21,6 +21,8 @@ requirements:
     - scipy
     - pandas
     - numba
+    - kmbio
+    - kmtools
 
 test:
   source_files:
