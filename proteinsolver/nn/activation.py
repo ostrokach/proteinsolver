@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
-from proteinsolver.nn.functional import sparse_multi_head_attention_forward
 from torch.nn.init import constant_, xavier_normal_, xavier_uniform_
 from torch.nn.parameter import Parameter
+
+from proteinsolver.nn.functional import sparse_multi_head_attention_forward
 
 
 class SparseMultiheadAttention(nn.Module):
