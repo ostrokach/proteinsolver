@@ -15,7 +15,7 @@ requirements:
     - python
   run:
     - python
-    - ruamel_yaml
+    - ruamel.yaml
     - pytorch >=1.0.1
     - numpy
     - scipy
