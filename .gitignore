@@ -86,3 +86,7 @@ report/index.html
 node_modules
 
 .DS_Store
+
+# Manuscript
+*.html
+manuscript
