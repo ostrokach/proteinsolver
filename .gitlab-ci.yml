@@ -150,28 +150,11 @@ deploy:
   stage: deploy
   extends: .configure
   script:
-    # Create conda environment
-    - conda create -n deploy -q "python=${PYTHON_VERSION}" twine || true
-    - source activate deploy
-    # Rename wheels from `*-linux_x86_64.whl` to `*-manylinux1_x86_64.whl`
-    # so that they can be uploaded to PyPI.
-    - for i in $CI_PROJECT_DIR/conda-bld/linux-64/*.whl ; do
-      echo $i ;
-      if [[ $i = *"-linux_x86_64.whl" ]]; then
-      mv "${i}" "${i%%-linux_x86_64.whl}-manylinux1_x86_64.whl" ;
-      fi ;
-      done
-    # Development releases go to the Anaconda dev channel
-    - if [[ ${PACKAGE_VERSION} = *"dev"* ]] ; then
-      anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/linux-64/*.tar.bz2 -u ostrokach --label dev --force --no-progress ;
-      fi
-    # Tagged releases go to the Anaconda and PyPI main channels
-    - if [[ -n ${CI_COMMIT_TAG} ]] ; then
-      anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/linux-64/*.tar.bz2 -u ostrokach --no-progress ;
-      twine upload $CI_PROJECT_DIR/conda-bld/linux-64/*.whl || true ;
-      fi
+    - anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/linux-64/*.tar.bz2 -u ostrokach-forge --no-progress ;
   dependencies:
     - build
+  only:
+    - tags
 
 # === Pages ===
 

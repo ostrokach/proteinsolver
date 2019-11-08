@@ -6,7 +6,7 @@ source:
   path: ../../
 
 build:
-  script: $PYTHON setup.py install --single-version-externally-managed --record=record.txt
+  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv
   number: 0
   noarch: python
 
@@ -34,11 +34,6 @@ test:
     - hypothesis
   imports:
     - proteinsolver
-
-outputs:
-  - name: proteinsolver
-    type: conda
-  - type: wheel
 
 about:
   home: https://gitlab.com/ostrokach/proteinsolver
