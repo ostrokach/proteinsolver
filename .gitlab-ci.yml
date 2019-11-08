@@ -87,11 +87,12 @@ test:
     - conda create -n test -q --use-local
       "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 || true
     - source activate test
+    - which python
+    - python -c "import ruamel.yaml"
+    - python -c "from ruamel import yaml"
     - pip install pytest-cov
     - *install-torch-geometric
     # Run tests
-    - which python
-    - python -c "from ruamel import yaml"
     - PKG_INSTALL_DIR=$(python -c "import proteinsolver; print(proteinsolver.__path__[0])")
     - python -c "from ruamel import yaml"
     - echo ${PKG_INSTALL_DIR}
