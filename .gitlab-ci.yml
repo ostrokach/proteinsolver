@@ -28,9 +28,6 @@ variables:
     - mkdir -p "${CI_PROJECT_DIR}/conda-bld"
     # Fix "FileNotFoundError(2, 'No such file or directory')" error
     - mkdir -p ~/.conda/envs
-  cache:
-    paths:
-      - .conda
   except:
     variables:
       - $UPDATE_PAGES
