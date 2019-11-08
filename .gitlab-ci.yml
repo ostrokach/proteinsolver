@@ -124,7 +124,7 @@ docs:
     - conda index /opt/conda/conda-bld/
     # Create conda environment for testing
     - conda create -n test -q --use-local
-      "python=${PYTHON_VERSION}" $CI_PROJECT_NAME nbconvert ipython ipykernel pandoc || true
+      "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 nbconvert ipython ipykernel pandoc || true
     - source activate test
     - pip install -q sphinx sphinx_rtd_theme recommonmark nbsphinx coverage
     - *install-torch-geometric
