@@ -39,9 +39,8 @@ lint:
   stage: lint
   extends: .configure
   script:
-    - conda create -n lint -q "python=${PYTHON_VERSION}" || true
+    - conda create -n lint -q "python=${PYTHON_VERSION}" isort toml flake8 mypy black
     - source activate lint
-    - pip install isort[pyproject] flake8 mypy black
     - python -m isort -p ${CI_PROJECT_NAME} -c
     - python -m flake8
     - python -m black --config pyproject.toml --check .
