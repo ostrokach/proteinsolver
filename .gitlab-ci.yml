@@ -199,9 +199,8 @@ pages:
       --private-token ${CI_DOCS_TOKEN}
       --output-dir ${OUTPUT_DIR}
     # Whitepaper
-    - mkdir -p ${OUTPUT_DIR}
-    - cp -r report ${OUTPUT_DIR}
-    - mv ${OUTPUT_DIR}/report/README.html ${OUTPUT_DIR}/report/index.html
+    # - cp -r manuscript ${OUTPUT_DIR}
+    # - mv ${OUTPUT_DIR}/manuscript/README.html ${OUTPUT_DIR}/manuscript/index.html
   artifacts:
     paths:
       - public
