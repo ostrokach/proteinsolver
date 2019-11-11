@@ -11,7 +11,6 @@ stages:
 
 variables:
   PACKAGE_VERSION: "0.1.1"
-  DOCS_SECRET_KEY: "FGIDVYN9fMx8qvsyPSKtoLaEucROasB"
   PYTHON_VERSION: "3.7"
 
 # === Configurations ===
@@ -162,7 +161,7 @@ deploy:
     - pip install jinja2 python-gitlab
   script:
     # Set environment variables
-    - export OUTPUT_DIR="./public/${DOCS_SECRET_KEY}"
+    - export OUTPUT_DIR="./public/"
     # Add current docs to public
     - mv -f public latest || true
     - mkdir -p ${OUTPUT_DIR}
@@ -190,7 +189,7 @@ pages:
     - pip install jinja2 python-gitlab
   script:
     # Set environment variables
-    - export OUTPUT_DIR="./public/${DOCS_SECRET_KEY}"
+    - export OUTPUT_DIR="./public/"
     - mkdir -p ${OUTPUT_DIR}
     # Download all previous docs
     - python .ci/pages/download_docs.py

@@ -9,7 +9,6 @@ default_context:
     project_slug: proteinsolver
     project_import: proteinsolver
     project_short_description: Learn to solve constraint satisfaction problems (CSPs) from data.
-    docs_secret_key: ""
     version: "0.1.1"
     create_author_file: "y"
     open_source_license: MIT License
