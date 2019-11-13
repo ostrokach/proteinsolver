@@ -1,3 +1,5 @@
+import math
+from pathlib import Path
 from typing import Optional
 
 import pandas as pd
@@ -15,36 +17,51 @@ from proteinsolver.utils import (
 )
 
 
-class SudokuDataset4(Dataset):
+class SudokuDataset4(torch.utils.data.IterableDataset):
     def __init__(
         self, root, subset=None, data_url=None, transform=None, pre_transform=None, pre_filter=None
     ) -> None:
         """Create new SudokuDataset."""
+        super().__init__()
+        self.root = Path(root).expanduser().resolve().as_posix()
+        self.transform = transform
+        self.pre_transform = pre_transform
+        self.pre_filter = pre_filter
+
         if data_url is None:
             assert subset is not None
             file_name = f"{subset.replace('sudoku_', '')}.parquet"
             self.data_url = f"{settings.data_url}/deep-protein-gen/sudoku_difficult/{file_name}"
         else:
             self.data_url = data_url
-        super().__init__(root, transform, pre_transform, pre_filter)
+
         self.sudoku_graph = torch.from_numpy(gen_sudoku_graph_featured()).to_sparse(2)
         self.file = pq.ParquetFile(self.data_url)
-        self.reset()
 
-    def reset(self) -> None:
-        self.prev_index = None
-        self.row_group = None
-        self.data_chunk = None
-        self.data_chunk_idx = None
+    def __iter__(self):
+        worker_info = torch.utils.data.get_worker_info()
+        if worker_info is not None:
+            num_row_groups_per_worker = int(
+                math.ceil(self.file.num_row_groups / worker_info.num_workers)
+            )
+            min_row_group_index = worker_info.id * num_row_groups_per_worker
+            max_row_group_index = min(
+                (worker_info.id + 1) * num_row_groups_per_worker, self.file.num_row_groups
+            )
+            row_group_indices = [
+                i
+                for i in range(0, self.file.num_row_groups)
+                if min_row_group_index <= i < max_row_group_index
+            ]
+        else:
+            row_group_indices = range(0, self.file.num_row_groups)
 
-    def _download(self):
-        pass
-
-    def _process(self):
-        pass
-
-    def __len__(self):
-        return self.file.metadata.num_rows
+        for row_group in row_group_indices:
+            data_list = self._read_row_group(row_group)
+            for data in data_list:
+                data.edge_index = self.sudoku_graph.indices()
+                data.edge_attr = self.sudoku_graph.values()
+                yield data
 
     def _read_row_group(self, row_group: int):
         df = self.file.read_row_group(row_group).to_pandas(integer_object_nulls=True)
@@ -61,27 +78,6 @@ class SudokuDataset4(Dataset):
                 data = self.pre_transform(data)
             data_list.append(data)
         return data_list
-
-    def get(self, idx):
-        if self.prev_index is None:
-            assert idx == 0, idx
-            self.row_group = 0
-            self.data_chunk = self._read_row_group(self.row_group)
-            self.data_chunk_idx = 0
-        else:
-            assert self.prev_index == idx - 1, (self.prev_index, idx)
-            self.data_chunk_idx += 1
-        self.prev_index = idx
-
-        if self.data_chunk_idx >= len(self.data_chunk):
-            self.row_group += 1
-            self.data_chunk = self._read_row_group(self.row_group)
-            self.data_chunk_idx = 0
-
-        data = self.data_chunk[self.data_chunk_idx]
-        data.edge_index = self.sudoku_graph.indices()
-        data.edge_attr = self.sudoku_graph.values()
-        return data
 
 
 class SudokuDataset3(Dataset):
