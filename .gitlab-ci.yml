@@ -10,8 +10,7 @@ stages:
 # === Variables ===
 
 variables:
-  PACKAGE_VERSION: "0.1.0"
-  DOCS_SECRET_KEY: "FGIDVYN9fMx8qvsyPSKtoLaEucROasB"
+  PACKAGE_VERSION: "0.1.1"
   PYTHON_VERSION: "3.7"
 
 # === Configurations ===
@@ -23,13 +22,11 @@ variables:
     - conda config --add envs_dirs "${CI_PROJECT_DIR}/.conda/envs"
     - conda config --add pkgs_dirs "${CI_PROJECT_DIR}/.conda/pkgs"
     - conda config --add channels pytorch
+    - conda config --append channels kimlab
     # Set conda build dir
     - mkdir -p "${CI_PROJECT_DIR}/conda-bld"
     # Fix "FileNotFoundError(2, 'No such file or directory')" error
     - mkdir -p ~/.conda/envs
-  cache:
-    paths:
-      - .conda
   except:
     variables:
       - $UPDATE_PAGES
@@ -41,9 +38,8 @@ lint:
   stage: lint
   extends: .configure
   script:
-    - conda create -n lint -q "python=${PYTHON_VERSION}" || true
+    - conda create -n lint -q "python=${PYTHON_VERSION}" isort toml flake8 mypy black
     - source activate lint
-    - pip install isort[pyproject] flake8 mypy black
     - python -m isort -p ${CI_PROJECT_NAME} -c
     - python -m flake8
     - python -m black --config pyproject.toml --check .
@@ -68,6 +64,13 @@ build:
 
 # === Test ===
 
+.install-torch-geometric: &install-torch-geometric
+  - pip install torch-scatter
+  - pip install torch-sparse
+  - pip install torch-cluster
+  - pip install torch-spline-conv
+  - pip install torch-geometric
+
 test:
   stage: test
   extends: .configure
@@ -79,14 +82,14 @@ test:
     - conda create -n test -q --use-local
       "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 || true
     - source activate test
-    # Install pip dependencies
-    - pip install --verbose --no-cache-dir torch-scatter
-    - pip install --verbose --no-cache-dir torch-sparse
-    - pip install --verbose --no-cache-dir torch-cluster
-    - pip install --verbose --no-cache-dir torch-spline-conv (optional)
-    - pip install torch-geometric
+    - which python
+    - python -c "import ruamel.yaml"
+    - python -c "from ruamel import yaml"
+    - pip install pytest-cov
+    - *install-torch-geometric
     # Run tests
     - PKG_INSTALL_DIR=$(python -c "import proteinsolver; print(proteinsolver.__path__[0])")
+    - python -c "from ruamel import yaml"
     - echo ${PKG_INSTALL_DIR}
     - python -m pytest
       -c setup.cfg
@@ -117,9 +120,10 @@ docs:
     - conda index /opt/conda/conda-bld/
     # Create conda environment for testing
     - conda create -n test -q --use-local
-      "python=${PYTHON_VERSION}" $CI_PROJECT_NAME nbconvert ipython ipykernel pandoc || true
+      "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 nbconvert ipython ipykernel pandoc || true
     - source activate test
     - pip install -q sphinx sphinx_rtd_theme recommonmark nbsphinx coverage
+    - *install-torch-geometric
     # Build docs
     - sphinx-build ${CI_PROJECT_DIR}/docs public
     # Coverage
@@ -141,28 +145,11 @@ deploy:
   stage: deploy
   extends: .configure
   script:
-    # Create conda environment
-    - conda create -n deploy -q "python=${PYTHON_VERSION}" twine || true
-    - source activate deploy
-    # Rename wheels from `*-linux_x86_64.whl` to `*-manylinux1_x86_64.whl`
-    # so that they can be uploaded to PyPI.
-    - for i in $CI_PROJECT_DIR/conda-bld/linux-64/*.whl ; do
-      echo $i ;
-      if [[ $i = *"-linux_x86_64.whl" ]]; then
-      mv "${i}" "${i%%-linux_x86_64.whl}-manylinux1_x86_64.whl" ;
-      fi ;
-      done
-    # Development releases go to the Anaconda dev channel
-    - if [[ ${PACKAGE_VERSION} = *"dev"* ]] ; then
-      anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/linux-64/*.tar.bz2 -u ostrokach --label dev --force --no-progress ;
-      fi
-    # Tagged releases go to the Anaconda and PyPI main channels
-    - if [[ -n ${CI_COMMIT_TAG} ]] ; then
-      anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/linux-64/*.tar.bz2 -u ostrokach --no-progress ;
-      twine upload $CI_PROJECT_DIR/conda-bld/linux-64/*.whl || true ;
-      fi
+    - anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/*/*.tar.bz2 -u ostrokach-forge --no-progress ;
   dependencies:
     - build
+  only:
+    - tags
 
 # === Pages ===
 
@@ -174,7 +161,7 @@ deploy:
     - pip install jinja2 python-gitlab
   script:
     # Set environment variables
-    - export OUTPUT_DIR="./public/${DOCS_SECRET_KEY}"
+    - export OUTPUT_DIR="./public/"
     # Add current docs to public
     - mv -f public latest || true
     - mkdir -p ${OUTPUT_DIR}
@@ -202,7 +189,7 @@ pages:
     - pip install jinja2 python-gitlab
   script:
     # Set environment variables
-    - export OUTPUT_DIR="./public/${DOCS_SECRET_KEY}"
+    - export OUTPUT_DIR="./public/"
     - mkdir -p ${OUTPUT_DIR}
     # Download all previous docs
     - python .ci/pages/download_docs.py
@@ -211,9 +198,8 @@ pages:
       --private-token ${CI_DOCS_TOKEN}
       --output-dir ${OUTPUT_DIR}
     # Whitepaper
-    - mkdir -p ${OUTPUT_DIR}
-    - cp -r report ${OUTPUT_DIR}
-    - mv ${OUTPUT_DIR}/report/README.html ${OUTPUT_DIR}/report/index.html
+    # - cp -r manuscript ${OUTPUT_DIR}
+    # - mv ${OUTPUT_DIR}/manuscript/README.html ${OUTPUT_DIR}/manuscript/index.html
   artifacts:
     paths:
       - public

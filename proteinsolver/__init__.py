@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
-__all__ = ["utils", "datasets", "nn", "models"]
+__version__ = "0.1.1"
+__all__ = ["settings", "utils", "datasets", "nn", "models"]
 
 from . import *

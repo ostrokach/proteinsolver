@@ -52,6 +52,26 @@ def gen_sudoku_graph_dense() -> np.ndarray:
     return adj_dense
 
 
+def gen_sudoku_graph_featured() -> np.ndarray:
+    """Generate Sudoku constraint graph (dense)."""
+    # Create connectivity matrix for each pixel in graph
+    lst = []
+    for i in range(9):
+        for j in range(9):
+            a = np.zeros((9, 9, 3), dtype=np.float32)
+            i_div = i // 3
+            j_div = j // 3
+            a[i_div * 3 : (i_div + 1) * 3, j_div * 3 : (j_div + 1) * 3, 0] = 1
+            a[i, :, 1] = 1
+            a[:, j, 2] = 1
+            lst.append(a)
+    # Combine into a single connectivity matrix
+    adj_dense = np.empty((81, 81, 3), dtype=np.float32)
+    for i, a in enumerate(lst):
+        adj_dense[i, :, :] = a.reshape(81, 3)
+    return adj_dense
+
+
 def gen_sudoku_graph() -> Tuple[torch.tensor, torch.tensor]:
     """Generate Sudoku constraint graph (sparse)."""
     adj_dense = gen_sudoku_graph_dense()

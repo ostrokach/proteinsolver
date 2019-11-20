@@ -1,12 +1,12 @@
 package:
   name: proteinsolver
-  version: 0.1.0
+  version: 0.1.1
 
 source:
   path: ../../
 
 build:
-  script: $PYTHON setup.py install --single-version-externally-managed --record=record.txt
+  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv
   number: 0
   noarch: python
 
@@ -15,12 +15,14 @@ requirements:
     - python
   run:
     - python
-    - ruamel_yaml
+    - ruamel.yaml >=0.16.0
     - pytorch >=1.0.1
     - numpy
     - scipy
     - pandas
     - numba
+    - kmbio
+    - kmtools
 
 test:
   source_files:
@@ -32,11 +34,6 @@ test:
     - hypothesis
   imports:
     - proteinsolver
-
-outputs:
-  - name: proteinsolver
-    type: conda
-  - type: wheel
 
 about:
   home: https://gitlab.com/ostrokach/proteinsolver
