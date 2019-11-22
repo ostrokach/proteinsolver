@@ -5,6 +5,7 @@ stages:
   - lint
   - build
   - test
+  - doc
   - deploy
 
 # === Variables ===
@@ -94,8 +95,8 @@ test:
     - echo ${PKG_INSTALL_DIR}
     - python -m pytest
       -c setup.cfg
-      --cov="${PKG_INSTALL_DIR}"
       --color=yes
+      --cov="${PKG_INSTALL_DIR}"
       --junitxml=pytest.xml
       tests/
     - sed -i "s|${PKG_INSTALL_DIR}/||g" .coverage
@@ -104,8 +105,7 @@ test:
     - build
   artifacts:
     paths:
-      - environment-py${PYTHON_VERSION/./}.yml
-      - .ci/conda/.coverage
+      - .coverage
     reports:
       junit: pytest.xml
   allow_failure: true
@@ -113,7 +113,7 @@ test:
 # === Docs ===
 
 docs:
-  stage: test
+  stage: doc
   extends: .configure
   script:
     # Restore built packages
@@ -133,8 +133,9 @@ docs:
     - coverage html || true
     - mv htmlcov public/ || true
   coverage: /^TOTAL.* (\d+\%)/
-  dependencies:
+  needs:
     - build
+    - test
   artifacts:
     paths:
       - public
@@ -147,7 +148,7 @@ deploy:
   extends: .configure
   script:
     - anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/*/*.tar.bz2 -u ostrokach-forge --no-progress ;
-  dependencies:
+  needs:
     - build
   only:
     - tags

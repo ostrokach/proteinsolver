@@ -6,7 +6,6 @@ python -m pytest \
     -c setup.cfg \
     --color=yes \
     --cov="${SP_DIR}/proteinsolver" \
-    --cov-report html \
     --junitxml=pytest.xml \
     tests/
 
