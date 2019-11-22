@@ -12,6 +12,7 @@ stages:
 variables:
   PACKAGE_VERSION: "0.1.1"
   PYTHON_VERSION: "3.7"
+  DOCS_SECRET_KEY: "d49e067ac2d5496f8b58f007bc8bd88e"
 
 # === Configurations ===
 
@@ -189,7 +190,7 @@ pages:
     - pip install jinja2 python-gitlab
   script:
     # Set environment variables
-    - export OUTPUT_DIR="./public/"
+    - export OUTPUT_DIR="./public/${DOCS_SECRET_KEY}"
     - mkdir -p ${OUTPUT_DIR}
     # Download all previous docs
     - python .ci/pages/download_docs.py
