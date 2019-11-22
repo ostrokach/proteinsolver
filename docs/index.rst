@@ -10,7 +10,6 @@ Contents
    readme
    installation
    usage
-   contributing
    authors
 
 .. toctree::
