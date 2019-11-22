@@ -2,14 +2,14 @@
 
 ## Stable release
 
-To install `proteinsolver` into a new conda environment, run this command in your terminal:
+To install `proteinsolver` into a new conda environment, run the following command:
 
 ```bash
 conda create -n proteinsolver -c conda-forge -c kimlab -c ostrokach-forge proteinsolver
 conda activate proteinsolver
 ```
 
-This is the preferred method to install `proteinsolver`, as it will always install the most recent stable release.
+This is the preferred method to install `proteinsolver`, as it will always install the most recent stable release, including all dependencies.
 
 If you don't have [conda] installed, this [Python installation guide] can guide
 you through the process.
