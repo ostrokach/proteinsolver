@@ -2,10 +2,11 @@
 
 ## Stable release
 
-To install `proteinsolver`, run this command in your terminal:
+To install `proteinsolver` into a new conda environment, run this command in your terminal:
 
 ```bash
-conda install proteinsolver -c ostrokach
+conda create -n proteinsolver -c conda-forge -c kimlab -c ostrokach-forge proteinsolver
+conda activate proteinsolver
 ```
 
 This is the preferred method to install `proteinsolver`, as it will always install the most recent stable release.
@@ -36,6 +37,9 @@ Once you have a copy of the source, you can install it with:
 
 ```bash
 python setup.py install
+```
+
+``` warning:: Using pip to install `proteinsolver` is not recommended since, currently, this method does not install any dependencies.
 ```
 
 [GitLab repo]: https://gitlab.com/ostrokach/proteinsolver
