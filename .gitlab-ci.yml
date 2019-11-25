@@ -112,7 +112,7 @@ test:
 
 # === Docs ===
 
-docs:
+doc:
   stage: doc
   extends: .configure
   script:
@@ -133,7 +133,7 @@ docs:
     - coverage html || true
     - mv htmlcov public/ || true
   coverage: /^TOTAL.* (\d+\%)/
-  needs:
+  dependencies:
     - build
     - test
   artifacts:
@@ -177,7 +177,7 @@ deploy:
       --job-name docs
       --private-token ${CI_DOCS_TOKEN}
       --output-dir ${OUTPUT_DIR}
-  dependencies:
+  needs:
     - docs
   artifacts:
     paths:
