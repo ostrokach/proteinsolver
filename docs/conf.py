@@ -35,12 +35,16 @@ import proteinsolver
 
 # -- General configuration ---------------------------------------------
 
+def setup(app):
+    app.add_stylesheet('css/custom.css')  # may also be an URL
+
 # If your documentation needs a minimal Sphinx version, state it here.
 # needs_sphinx = "1.0"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom ones.
 extensions = [
+    "sphinx_markdown_tables",
     "nbsphinx",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",

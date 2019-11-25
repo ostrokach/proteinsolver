@@ -123,7 +123,7 @@ docs:
     - conda create -n test -q --use-local
       "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 nbconvert ipython ipykernel pandoc || true
     - source activate test
-    - pip install -q sphinx sphinx_rtd_theme recommonmark nbsphinx coverage
+    - pip install -q sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables nbsphinx coverage
     - *install-torch-geometric
     # Build docs
     - sphinx-build ${CI_PROJECT_DIR}/docs public
