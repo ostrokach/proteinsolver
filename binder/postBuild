@@ -33,7 +33,12 @@ pushd ~/datapkg_data_dir/sudoku
 ~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/sudoku/sudoku_test.csv.gz .
 popd
 
-mkdir -p ~/datapkg_data_dir/sudoku_difficult
-pushd ~/datapkg_data_dir/sudoku_difficult
+mkdir -p ~/datapkg_data_dir/deep-protein-gen/sudoku_difficult
+pushd ~/datapkg_data_dir/deep-protein-gen/sudoku_difficult
 ~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/sudoku_difficult/valid_0.parquet .
+popd
+
+mkdir -p ~/datapkg_data_dir/deep-protein-gen/sudoku_difficult
+pushd ~/datapkg_data_dir/deep-protein-gen/sudoku_difficult
+~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/datasets-test/protherm/protherm.parquet .
 popd
