@@ -16,8 +16,10 @@ The following notebooks can be used to explore the basic functionality of `prote
 
 | Notebook name           | MyBinder                                                                                                                                                                                                                                | Description                                                            |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `20_test_sudoku.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_test_sudoku.ipynb) | Test a network trained to solve Sudoku puzzles.                        |
-| `20_test_protein.ipynb` | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_test_protein.ipynb) | Test a network trained to predict the amino acid sequence of proteins. |
+| `20_sudoku_demo.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_sudoku_demo.ipynb) | Test a network trained to solve Sudoku puzzles.                        |
+| `06_sudoku_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_sudoku_analysis.ipynb) | Test a network trained to solve Sudoku puzzles.                        |
+| `20_protein_demo.ipynb` | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_protein_demo.ipynb) | Test a network trained to predict the amino acid sequence of proteins. |
+| `06_protein_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_protein_analysis.ipynb) | Test a network trained to solve Sudoku puzzles.                        |
 
 Other notebooks in the `notebooks/` directory show how to perform more extensive validations of the networks and how to train new networks.
 
@@ -46,8 +48,26 @@ cd path/to/proteinsolver
 pip install --editable .
 ```
 
+## Pre-trained models
+
+Pre-trained models can be downloaded using [`gsutil`][gsutil], by running the following command in the root folder of the `proteinsolver` repository:
+
+```bash
+gsutil rsync -r gs://proteinsolver/v0.1/ ./
+```
+
+## Training and validation datasets
+
+Data used to train and validate the "proteinsolver" network to solve Sudoku puzzles and reconstruct protein sequences can be downloaded using [`gsutil`][gsutil]. The `DATAPKG_DATA_DIR` environment variable should be set to the folder containing the downloaded files.
+
+```bash
+gsutil rsync -r gs://deep-protein-gen/ ./
+```
+
 ## Environment variables
 
 - `DATAPKG_DATA_DIR` - Location of training and validation data.
 
 ## References
+
+[gsutil]: https://cloud.google.com/sdk/install
