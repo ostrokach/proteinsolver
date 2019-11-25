@@ -1,4 +1,4 @@
-# ProteinSolver: Solving the Inverse Protein Folding Problem with Graph Neural Networks
+# ProteinSolver
 
 [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?urlpath=lab)
 [![docs](https://img.shields.io/badge/docs-v0.1.1-blue.svg)](https://ostrokach.gitlab.io/proteinsolver/d49e067ac2d5496f8b58f007bc8bd88e/v0.1.1/)
@@ -14,12 +14,12 @@ ProteinSolver is a deep neural network which learns to solve (ill-defined) const
 
 The following notebooks can be used to explore the basic functionality of `proteinsolver`.
 
-| Notebook name           | MyBinder                                                                                                                                                                                                                                | Description                                                            |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `20_sudoku_demo.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_sudoku_demo.ipynb) | Test a network trained to solve Sudoku puzzles.                        |
-| `06_sudoku_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_sudoku_analysis.ipynb) | Test a network trained to solve Sudoku puzzles.                        |
-| `20_protein_demo.ipynb` | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_protein_demo.ipynb) | Test a network trained to predict the amino acid sequence of proteins. |
-| `06_protein_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_protein_analysis.ipynb) | Test a network trained to solve Sudoku puzzles.                        |
+| Notebook name               | MyBinder                                                                                                                                                                                                                       | Description                                                                                            |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `20_sudoku_demo.ipynb`      | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_sudoku_demo.ipynb)      | Use a pre-trained network to solve a single Sudoku puzzle.                                             |
+| `06_sudoku_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_sudoku_analysis.ipynb)  | Evaluate a network trained to solve Sudoku puzzles using the validation<br>and test datasets.          |
+| `20_protein_demo.ipynb`     | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_protein_demo.ipynb)     | Use a pre-trained network to design sequences for a single protein geometry.                           |
+| `06_protein_analysis.ipynb` | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?filepath=notebooks%2F20_protein_analysis.ipynb) | Evaluate a network trained to reconstruct protein sequences using the<br>validation and test datasets. |
 
 Other notebooks in the `notebooks/` directory show how to perform more extensive validations of the networks and how to train new networks.
 
