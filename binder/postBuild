@@ -14,3 +14,26 @@ jupyter serverextension enable jupyter_server_proxy
 
 # Install proteinsolver in development mode
 pip install -e .
+
+# Install gcloud CLI
+curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-272.0.0-linux-x86_64.tar.gz -o google-cloud-sdk.tar.gz
+openssl dgst -sha256 google-cloud-sdk.tar.gz | grep 1920b14a985e12e8658607685aec9abed8f8dde499d773bc1ca6f0abe1b25425
+tar -xzf google-cloud-sdk.tar.gz
+rm google-cloud-sdk.tar.gz
+./google-cloud-sdk/install.sh -q
+# ./google-cloud-sdk/bin/gcloud init
+
+# Download pretrained models
+~/google-cloud-sdk/bin/gsutil rsync -r gs://proteinsolver/v0.1/ ./
+
+# Download validation data
+mkdir -p ~/datapkg_data_dir/sudoku
+pushd ~/datapkg_data_dir/sudoku
+~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/sudoku/sudoku_valid.csv.gz .
+~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/sudoku/sudoku_test.csv.gz .
+popd
+
+mkdir -p ~/datapkg_data_dir/sudoku_difficult
+pushd ~/datapkg_data_dir/sudoku_difficult
+~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/sudoku_difficult/valid_0.parquet .
+popd
