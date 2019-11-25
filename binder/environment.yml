@@ -39,6 +39,7 @@ dependencies:
   - modeller
   - kmbio
   - kmtools
+  - nglview
   # Interactive notebooks
   - ipython
   - ipykernel
