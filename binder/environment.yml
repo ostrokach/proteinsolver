@@ -30,6 +30,7 @@ dependencies:
   - pytorch >=1.3
   - torchvision
   - torch-geometric
+  - tensorflow
   - tensorboard
   # Geometric
   - networkx
