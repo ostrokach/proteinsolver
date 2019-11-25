@@ -1,6 +1,6 @@
 # ProteinSolver: Solving the Inverse Protein Folding Problem with Graph Neural Networks
 
-[![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1)
+[![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.1?urlpath=lab)
 [![docs](https://img.shields.io/badge/docs-v0.1.1-blue.svg)](https://ostrokach.gitlab.io/proteinsolver/d49e067ac2d5496f8b58f007bc8bd88e/v0.1.1/)
 [![conda](https://img.shields.io/conda/dn/ostrokach-forge/proteinsolver.svg)](https://anaconda.org/ostrokach-forge/proteinsolver/)
 [![build status](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.1/build.svg)](https://gitlab.com/ostrokach/proteinsolver/commits/v0.1.1/)
