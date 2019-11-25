@@ -12,6 +12,9 @@ jupyter lab build --minimize=False
 jupyter serverextension enable --py jupyterlab_code_formatter
 jupyter serverextension enable jupyter_server_proxy
 
+# Install pip dependencies
+pip install weblogo  # TODO: Create a weblogo conda package.
+
 # Install proteinsolver in development mode
 pip install -e .
 
