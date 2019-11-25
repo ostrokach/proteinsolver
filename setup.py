@@ -8,7 +8,7 @@ def read_md(file):
 
 setup(
     name="proteinsolver",
-    version="0.1.2",
+    version="0.1.3",
     description="Learn to solve constraint satisfaction problems (CSPs) from data.",
     long_description=read_md("README.md"),
     author="Alexey Strokach",
