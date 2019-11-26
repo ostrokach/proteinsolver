@@ -149,7 +149,7 @@ deploy:
   extends: .configure
   script:
     - anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/*/*.tar.bz2 -u ostrokach-forge --no-progress ;
-  needs:
+  dependencies:
     - build
   only:
     - tags
