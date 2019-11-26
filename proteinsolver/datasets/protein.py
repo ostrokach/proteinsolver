@@ -158,7 +158,8 @@ class ProteinInMemoryDataset(InMemoryDataset):
                 continue
             if self.pre_transform is not None:
                 data = self.pre_transform(data)
-            data_list.append(data)
+            if data is not None:
+                data_list.append(data)
         data, slices = self.collate(data_list)
         torch.save((data, slices), self.processed_paths[0])
 
