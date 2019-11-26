@@ -112,6 +112,7 @@ test:
 
 # === Docs ===
 
+# NB: Has to be called "docs" for the pages script to work.
 docs:
   stage: doc
   extends: .configure
