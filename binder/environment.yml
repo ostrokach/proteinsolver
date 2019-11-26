@@ -34,6 +34,7 @@ dependencies:
   - tensorboard
   # Geometric
   - networkx
+  - ghostscript
   # Biology
   - biopython
   - modeller
