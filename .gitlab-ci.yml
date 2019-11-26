@@ -112,7 +112,7 @@ test:
 
 # === Docs ===
 
-doc:
+docs:
   stage: doc
   extends: .configure
   script:
