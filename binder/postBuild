@@ -30,8 +30,8 @@ rm google-cloud-sdk.tar.gz
 ~/google-cloud-sdk/bin/gsutil rsync -r gs://proteinsolver/v0.1/ ./
 
 # Download validation data
-mkdir -p ~/datapkg_data_dir/sudoku
-pushd ~/datapkg_data_dir/sudoku
+mkdir -p ~/datapkg_data_dir/deep-protein-gen/sudoku
+pushd ~/datapkg_data_dir/deep-protein-gen/sudoku
 ~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/sudoku/sudoku_valid.csv.gz .
 ~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/sudoku/sudoku_test.csv.gz .
 popd
@@ -41,7 +41,17 @@ pushd ~/datapkg_data_dir/deep-protein-gen/sudoku_difficult
 ~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/sudoku_difficult/valid_0.parquet .
 popd
 
-mkdir -p ~/datapkg_data_dir/deep-protein-gen/sudoku_difficult
-pushd ~/datapkg_data_dir/deep-protein-gen/sudoku_difficult
+mkdir -p ~/datapkg_data_dir/deep-protein-gen/processed/validation_data
+pushd ~/datapkg_data_dir/deep-protein-gen/processed/validation_data
+~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/processed/validation_data/part-00000-4f535e50-cdf4-4275-b6b3-a3038f24a1a9-c000.snappy.parquet .
+popd
+
+mkdir -p ~/datapkg_data_dir/deep-protein-gen/processed/test_data
+pushd ~/datapkg_data_dir/deep-protein-gen/processed/test_data
+~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/processed/test_data/part-00000-ba92a066-6ee2-47dc-883c-fd2044ecaa00-c000.snappy.parquet .
+popd
+
+mkdir -p ~/datapkg_data_dir/deep-protein-gen/datasets-test/protherm
+pushd ~/datapkg_data_dir/deep-protein-gen/datasets-test/protherm
 ~/google-cloud-sdk/bin/gsutil cp gs://deep-protein-gen/datasets-test/protherm/protherm.parquet .
 popd
