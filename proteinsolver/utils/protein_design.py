@@ -24,7 +24,7 @@ def get_node_proba(net, x, edge_index, edge_attr, num_categories=20):
         assert x[index_array[max_proba_position]] == num_categories
         assert x_proba[index_array[max_proba_position]] == 0
         x[index_array[max_proba_position]] = x_ref[index_array[max_proba_position]]
-        x_proba[index_array[max_proba_position]] = torch.log(max_proba)
+        x_proba[index_array[max_proba_position]] = max_proba
         mask = x == num_categories
     return x_proba
 
