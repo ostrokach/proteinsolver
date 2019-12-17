@@ -70,4 +70,8 @@ gsutil rsync -r gs://deep-protein-gen/ ./
 
 ## References
 
+[![poster](https://img.shields.io/static/v1?label=poster&message=html&color=orange)](https://ostrokach-presentations.gitlab.io/2019-12-13-neurips-poster/7ad67cfdf35a4e3e8346e293dc444074/)
+
+- Alexey Strokach, David Becerra, Carles Corbi, Albert Perez-Riba, Philip M. Kim. *Designing real novel proteins using deep graph neural networks*. https://doi.org/10.1101/868935
+
 [gsutil]: https://cloud.google.com/sdk/install
