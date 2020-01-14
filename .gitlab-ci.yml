@@ -47,6 +47,7 @@ black:
   image: pipelinecomponents/black:latest
   script:
     - black --config pyproject.toml --check .
+  allow_failure: true
 
 lint:
   stage: linting
