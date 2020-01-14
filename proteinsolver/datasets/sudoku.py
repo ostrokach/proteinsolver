@@ -2,9 +2,10 @@ from pathlib import Path
 
 import pandas as pd
 import torch
-from proteinsolver.utils import gen_sudoku_graph
 from torch.utils.data import Dataset
 from torch_geometric.data import Data
+
+from proteinsolver.utils import gen_sudoku_graph
 
 
 def str_to_tensor(s: str) -> torch.Tensor:
