@@ -1,5 +1,4 @@
 import itertools
-from typing import List, Tuple
 
 import mdtraj
 import numpy as np
