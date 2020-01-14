@@ -4,7 +4,8 @@ from typing import List
 import pytest
 from ruamel import yaml
 
-from proteinsolver.utils import str_to_tensor, sudoku_is_solved
+from proteinsolver.datasets.sudoku import str_to_tensor
+from proteinsolver.utils import sudoku_is_solved
 
 
 def read_config(test_name: str) -> List:
