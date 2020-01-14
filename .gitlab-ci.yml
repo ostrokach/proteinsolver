@@ -2,7 +2,7 @@ image: registry.gitlab.com/ostrokach-docker/conda:centos7
 
 stages:
   - pages
-  - lint
+  - linting
   - build
   - test
   - doc
@@ -36,8 +36,20 @@ variables:
 
 # === Lint ===
 
+flake8:
+  stage: linting
+  image: pipelinecomponents/flake8:latest
+  script:
+    - flake8 --verbose .
+
+black:
+  stage: linting
+  image: pipelinecomponents/black:latest
+  script:
+    - black --config pyproject.toml --check .
+
 lint:
-  stage: lint
+  stage: linting
   extends: .configure
   script:
     - conda create -n lint -q "python=${PYTHON_VERSION}" isort toml flake8 mypy black
