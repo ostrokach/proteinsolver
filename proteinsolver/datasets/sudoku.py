@@ -2,10 +2,14 @@ from pathlib import Path
 
 import pandas as pd
 import torch
+from proteinsolver.utils import gen_sudoku_graph
 from torch.utils.data import Dataset
 from torch_geometric.data import Data
 
-from proteinsolver.utils import gen_sudoku_graph, str_to_tensor
+
+def str_to_tensor(s: str) -> torch.Tensor:
+    t = torch.tensor([int(i) for i in s], dtype=torch.long)
+    return t
 
 
 class SudokuDataset(Dataset):

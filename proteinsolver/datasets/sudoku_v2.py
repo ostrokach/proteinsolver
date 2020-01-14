@@ -9,12 +9,8 @@ from torch_geometric.data import Data, Dataset, InMemoryDataset
 
 from proteinsolver import settings
 from proteinsolver.datasets import download_url
-from proteinsolver.utils import (
-    construct_solved_sudoku,
-    gen_sudoku_graph,
-    gen_sudoku_graph_featured,
-    str_to_tensor,
-)
+from proteinsolver.datasets.sudoku import str_to_tensor
+from proteinsolver.utils import construct_solved_sudoku, gen_sudoku_graph, gen_sudoku_graph_featured
 
 
 class SudokuDataset4(torch.utils.data.IterableDataset):

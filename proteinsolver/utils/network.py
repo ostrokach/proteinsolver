@@ -5,7 +5,7 @@ from contextlib import contextmanager
 def eval_net(net):
     training = net.training
     try:
-        net.train(False)
+        net.eval()
         yield
     finally:
         net.train(training)
