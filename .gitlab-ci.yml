@@ -36,19 +36,6 @@ variables:
 
 # === Lint ===
 
-flake8:
-  stage: linting
-  image: pipelinecomponents/flake8:latest
-  script:
-    - flake8 --verbose .
-
-black:
-  stage: linting
-  image: pipelinecomponents/black:latest
-  script:
-    - black --config pyproject.toml --check .
-  allow_failure: true
-
 lint:
   stage: linting
   extends: .configure
