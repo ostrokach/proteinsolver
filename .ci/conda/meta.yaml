@@ -23,7 +23,6 @@ requirements:
     - numba
     - kmbio
     - kmtools
-    - mdtraj
 
 test:
   source_files:
