@@ -97,6 +97,8 @@ class PrioritizedItem:
 
 @torch.no_grad()
 def design_protein(net, x, edge_index, edge_attr, results, cutoff):
+    """Design protein sequences using a search strategy.
+    """
     x_proba = torch.ones_like(x).to(torch.float) * cutoff
     heap = [PrioritizedItem(0, x, x_proba)]
     i = 0
@@ -108,7 +110,7 @@ def design_protein(net, x, edge_index, edge_attr, results, cutoff):
                 f"heap size: {len(heap):7d}; results size: {len(results)}"
             )
         if not (item.x == 20).any():
-            results.append(item)
+            results.append(item.cpu())
         else:
             children = get_descendents(net, item.x, item.x_proba, edge_index, edge_attr, cutoff)
             for x, x_proba in children:
