@@ -7,7 +7,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /env \
-    && curl -sS https://storage.googleapis.com/conda-envs/defaults/defaults-v21.tar.gz \
+    && curl -sS https://storage.googleapis.com/conda-envs/defaults/defaults-v22.tar.gz \
         | tar -xz -C /env \
     && /bin/bash -c "source /env/bin/activate && conda-unpack && source deactivate"
 
@@ -23,11 +23,6 @@ WORKDIR /home/${USER_NAME}
 
 USER ${USER_NAME}:${GROUP_NAME}
 
-RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/develop/proteinsolver-develop.tar.gz -O \
-    && tar -xzf proteinsolver-develop.tar.gz \
-    && rm proteinsolver-develop.tar.gz \
-    && mv proteinsolver-develop proteinsolver
-
 RUN mkdir -p proteinsolver/notebooks/sudoku_train/c8de7e56 \
     && curl -sS https://storage.googleapis.com/proteinsolver/v0.1/notebooks/sudoku_train/c8de7e56/e1-s400000-d2400000-amv07269.state \
         -o proteinsolver/notebooks/sudoku_train/c8de7e56/e1-s400000-d2400000-amv07269.state \
@@ -39,7 +34,12 @@ RUN mkdir -p proteinsolver/notebooks/sudoku_train/c8de7e56 \
     && curl -sS https://storage.googleapis.com/proteinsolver/v0.1/notebooks/protein_train/191f05de/model.py \
         -o proteinsolver/notebooks/protein_train/191f05de/model.py
 
+RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/fff2082d1b7a398be90372ae7830e25960554fde/proteinsolver-fff2082d1b7a398be90372ae7830e25960554fde.tar.gz -O \
+    && tar -xzf proteinsolver-fff2082d1b7a398be90372ae7830e25960554fde.tar.gz \
+    && rm proteinsolver-fff2082d1b7a398be90372ae7830e25960554fde.tar.gz \
+    && mv proteinsolver-fff2082d1b7a398be90372ae7830e25960554fde proteinsolver
+
 COPY ./entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD voila --no-browser --ExecutePreprocessor.timeout=3600 --Voila.ip=0.0.0.0 --port=${PORT} ${NOTEBOOK_PATH}
+CMD voila --no-browser --ExecutePreprocessor.timeout=3600 --TagRemovePreprocessor.enabled=True --TagRemovePreprocessor.remove_cell_tags='{"hide"}' --Voila.ip=0.0.0.0 --port=${PORT} ${NOTEBOOK_PATH}
