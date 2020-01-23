@@ -34,10 +34,10 @@ RUN mkdir -p proteinsolver/notebooks/sudoku_train/c8de7e56 \
     && curl -sS https://storage.googleapis.com/proteinsolver/v0.1/notebooks/protein_train/191f05de/model.py \
         -o proteinsolver/notebooks/protein_train/191f05de/model.py
 
-RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/fff2082d1b7a398be90372ae7830e25960554fde/proteinsolver-fff2082d1b7a398be90372ae7830e25960554fde.tar.gz -O \
-    && tar -xzf proteinsolver-fff2082d1b7a398be90372ae7830e25960554fde.tar.gz \
-    && rm proteinsolver-fff2082d1b7a398be90372ae7830e25960554fde.tar.gz \
-    && mv proteinsolver-fff2082d1b7a398be90372ae7830e25960554fde proteinsolver
+RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/268bbef2a575df90b9c2e006daae003da72de015/proteinsolver-268bbef2a575df90b9c2e006daae003da72de015.tar.gz -O \
+    && tar -xzf proteinsolver-268bbef2a575df90b9c2e006daae003da72de015.tar.gz \
+    && rm proteinsolver-268bbef2a575df90b9c2e006daae003da72de015.tar.gz \
+    && mv proteinsolver-268bbef2a575df90b9c2e006daae003da72de015 proteinsolver
 
 COPY ./entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
