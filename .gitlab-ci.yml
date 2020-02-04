@@ -25,6 +25,7 @@ variables:
     - conda config --add pkgs_dirs "${CI_PROJECT_DIR}/.conda/pkgs"
     - conda config --add channels pytorch
     - conda config --append channels kimlab
+    - conda config --append channels ostrokach-forge
     # Set conda build dir
     - mkdir -p "${CI_PROJECT_DIR}/conda-bld"
     # Fix "FileNotFoundError(2, 'No such file or directory')" error
@@ -66,13 +67,6 @@ build:
 
 # === Test ===
 
-.install-torch-geometric: &install-torch-geometric
-  - pip install torch-scatter
-  - pip install torch-sparse
-  - pip install torch-cluster
-  - pip install torch-spline-conv
-  - pip install torch-geometric
-
 test:
   stage: test
   extends: .configure
@@ -84,15 +78,9 @@ test:
     - conda create -n test -q --use-local
       "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 || true
     - source activate test
-    - which python
-    - python -c "import ruamel.yaml"
-    - python -c "from ruamel import yaml"
     - pip install pytest-cov
-    - *install-torch-geometric
     # Run tests
     - PKG_INSTALL_DIR=$(python -c "import proteinsolver; print(proteinsolver.__path__[0])")
-    - python -c "from ruamel import yaml"
-    - echo ${PKG_INSTALL_DIR}
     - python -m pytest
       -c setup.cfg
       --color=yes
@@ -125,7 +113,6 @@ docs:
       "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 nbconvert ipython ipykernel pandoc || true
     - source activate test
     - pip install -q sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables nbsphinx coverage
-    - *install-torch-geometric
     # Build docs
     - sphinx-build ${CI_PROJECT_DIR}/docs public
     # Coverage

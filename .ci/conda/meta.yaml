@@ -16,13 +16,14 @@ requirements:
   run:
     - python
     - ruamel.yaml >=0.16.0
-    - pytorch >=1.0.1
     - numpy
     - scipy
     - pandas
     - numba
     - kmbio
     - kmtools
+    - pytorch >=1.4
+    - torch-geometric
 
 test:
   source_files:
