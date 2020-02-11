@@ -75,7 +75,7 @@ test:
     - cp -r $CI_PROJECT_DIR/conda-bld/* /opt/conda/conda-bld/
     - conda index /opt/conda/conda-bld/
     # Create conda environment for testing
-    - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld/noarch --strict-channel-priority
+    - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
       "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 || true
     - source activate test
     - pip install pytest-cov
