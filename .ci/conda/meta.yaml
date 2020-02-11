@@ -21,7 +21,7 @@ requirements:
     - pandas
     - numba
     - kmbio
-    - kmtools
+    - kmtools >=0.2.3
     - pytorch >=1.4
     - torch-geometric
 
