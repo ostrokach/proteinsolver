@@ -75,7 +75,7 @@ test:
     - cp -r $CI_PROJECT_DIR/conda-bld/* /opt/conda/conda-bld/
     - conda index /opt/conda/conda-bld/
     # Create conda environment for testing
-    - conda create -n test -q --use-local
+    - conda create -n test -q -c local
       "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 || true
     - source activate test
     - pip install pytest-cov
