@@ -73,15 +73,21 @@ test:
   stage: test
   extends: .configure
   script:
+    # Create conda environment for testing
+    - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
+      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} gcc_linux-64 gxx_linux-64 || true
+    - source activate test
+    - pip install pytest-cov
+    - mkdir coverage
     # Run tests
-    - cd ${CI_PROJECT_DIR}/.ci/conda
-    - conda build .
-      -c file://${CI_PROJECT_DIR}/conda-bld
-      --test
-      --python $PYTHON_VERSION
-    # Code coverage
-    - mkdir "${CI_PROJECT_DIR}/coverage"
-    - mv "${CI_PROJECT_DIR}/.coverage" "${CI_PROJECT_DIR}/coverage/.coverage"
+    - python -m pytest
+      -c setup.cfg
+      --cov="./coverage"
+      --cov-config=setup.cfg
+      --benchmark-disable
+      --color=yes
+      "tests/"
+  coverage: /^TOTAL.* (\d+\%)/
   dependencies:
     - build
   artifacts:

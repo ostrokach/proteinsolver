@@ -26,13 +26,6 @@ requirements:
     - torch-geometric
 
 test:
-  source_files:
-    - setup.cfg
-    - tests
-  requires:
-    - pytest
-    - pytest-cov
-    - hypothesis
   imports:
     - proteinsolver
 
