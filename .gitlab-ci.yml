@@ -98,7 +98,6 @@ test:
       - .coverage
     reports:
       junit: pytest.xml
-  allow_failure: true
 
 # === Docs ===
 
