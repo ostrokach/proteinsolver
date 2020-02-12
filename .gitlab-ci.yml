@@ -14,7 +14,6 @@ stages:
 variables:
   PACKAGE_VERSION: "0.1.9"
   PYTHON_VERSION: "3.7"
-  DOCS_SECRET_KEY: "d49e067ac2d5496f8b58f007bc8bd88e"
 
 # === Configurations ===
 
@@ -181,7 +180,7 @@ pages:
     - pip install jinja2 python-gitlab
   script:
     # Set environment variables
-    - export OUTPUT_DIR="./public/${DOCS_SECRET_KEY}"
+    - export OUTPUT_DIR="./public"
     - mkdir -p ${OUTPUT_DIR}
     # Download all previous docs
     - python .ci/pages/download_docs.py
@@ -189,9 +188,6 @@ pages:
       --job-name docs
       --private-token ${CI_DOCS_TOKEN}
       --output-dir ${OUTPUT_DIR}
-    # Whitepaper
-    # - cp -r manuscript ${OUTPUT_DIR}
-    # - mv ${OUTPUT_DIR}/manuscript/README.html ${OUTPUT_DIR}/manuscript/index.html
   artifacts:
     paths:
       - public
