@@ -33,7 +33,6 @@ variables:
         - salilab
         - omnia
       EOF
-    - cat ~/.condarc
     # - mkdir -p "${CI_PROJECT_DIR}/.conda/envs" "${CI_PROJECT_DIR}/.conda/pkgs"
     # - conda config --add envs_dirs "${CI_PROJECT_DIR}/.conda/envs"
     # - conda config --add pkgs_dirs "${CI_PROJECT_DIR}/.conda/pkgs"
