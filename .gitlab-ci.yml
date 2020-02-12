@@ -59,6 +59,7 @@ build:
     - conda install -yq conda conda-build conda-verify conda-forge-pinning
     - cd "${CI_PROJECT_DIR}/.ci/conda"
     - conda build .
+      --variant-config-files /opt/conda/conda_build_config.yaml
       --no-test
       --python $PYTHON_VERSION
       --output-folder "$CI_PROJECT_DIR/conda-bld"
