@@ -22,8 +22,8 @@ WORKDIR /home/${USER_NAME}
 
 USER ${USER_NAME}:${GROUP_NAME}
 
-RUN JUPYTER_DATA_DIR=$(/env/bin/jupyter --data-dir) \
-    && mkdir ${JUPYTER_DATA_DIR}/voila/templates/mytemplate \
+RUN JUPYTER_DATA_DIR=$(/env/bin/python -m jupyter --data-dir) \
+    && mkdir -p ${JUPYTER_DATA_DIR}/voila/templates/mytemplate \
     && cp -r /env/share/jupyter/voila/templates/default/nbconvert_templates ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/ \
     && cp -r /env/share/jupyter/voila/templates/default/templates ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/ \
     && mkdir ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static \
