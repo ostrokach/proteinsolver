@@ -2,16 +2,15 @@
 
 set -ev
 
+PACKAGE_ROOT_DIR="${RECIPE_DIR}/../.."
+
 python -m pytest \
     -c setup.cfg \
+    --cov="${SP_DIR}/kmtools/${SUBPKG_NAME}" \
+    --cov-config=setup.cfg \
+    --benchmark-disable \
     --color=yes \
-    --cov="${SP_DIR}/proteinsolver" \
-    --junitxml=pytest.xml \
-    tests/
+    "tests/${SUBPKG_NAME}"
 
-ls -al
-
-sed -i "s|${SP_DIR}/||g" .coverage
-mv .coverage "${RECIPE_DIR}/.coverage"
-mv pytest.xml "${RECIPE_DIR}/pytest.xml"
+mv .coverage "${PACKAGE_ROOT_DIR}/.coverage"
 mv htmlcov "${RECIPE_DIR}/htmlcov"

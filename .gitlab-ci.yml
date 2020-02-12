@@ -73,31 +73,20 @@ test:
   stage: test
   extends: .configure
   script:
-    # Restore built packages
-    - cp -r $CI_PROJECT_DIR/conda-bld/* /opt/conda/conda-bld/
-    - conda index /opt/conda/conda-bld/
-    # Create conda environment for testing
-    - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
-      "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 || true
-    - source activate test
-    - pip install pytest-cov
     # Run tests
-    - PKG_INSTALL_DIR=$(python -c "import proteinsolver; print(proteinsolver.__path__[0])")
-    - python -m pytest
-      -c setup.cfg
-      --color=yes
-      --cov="${PKG_INSTALL_DIR}"
-      --junitxml=pytest.xml
-      tests/
-    - sed -i "s|${PKG_INSTALL_DIR}/||g" .coverage
-  coverage: /^TOTAL.* (\d+\%)/
+    - cd ${CI_PROJECT_DIR}/.ci/conda
+    - conda build .
+      -c file://${CI_PROJECT_DIR}/conda-bld
+      --test
+      --python $PYTHON_VERSION
+    # Code coverage
+    - mkdir "${CI_PROJECT_DIR}/coverage"
+    - mv "${CI_PROJECT_DIR}/.coverage" "${CI_PROJECT_DIR}/coverage/.coverage"
   dependencies:
     - build
   artifacts:
     paths:
-      - .coverage
-    reports:
-      junit: pytest.xml
+      - coverage
 
 # === Docs ===
 
@@ -106,12 +95,9 @@ docs:
   stage: doc
   extends: .configure
   script:
-    # Restore built packages
-    - cp -r $CI_PROJECT_DIR/conda-bld/* /opt/conda/conda-bld/
-    - conda index /opt/conda/conda-bld/
     # Create conda environment for testing
-    - conda create -n test -q --use-local
-      "python=${PYTHON_VERSION}" $CI_PROJECT_NAME gcc_linux-64 gxx_linux-64 nbconvert ipython ipykernel pandoc || true
+    - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
+      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} gcc_linux-64 gxx_linux-64 nbconvert ipython ipykernel pandoc || true
     - source activate test
     - pip install -q sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables nbsphinx coverage
     # Build docs
