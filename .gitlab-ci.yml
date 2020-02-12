@@ -33,16 +33,6 @@ variables:
         - salilab
         - omnia
       EOF
-    # - mkdir -p "${CI_PROJECT_DIR}/.conda/envs" "${CI_PROJECT_DIR}/.conda/pkgs"
-    # - conda config --add envs_dirs "${CI_PROJECT_DIR}/.conda/envs"
-    # - conda config --add pkgs_dirs "${CI_PROJECT_DIR}/.conda/pkgs"
-    # - conda config --add channels pytorch
-    # - conda config --append channels kimlab
-    # - conda config --append channels ostrokach-forge
-    # Set conda build dir
-    # - mkdir -p "${CI_PROJECT_DIR}/conda-bld"
-    # Fix "FileNotFoundError(2, 'No such file or directory')" error
-    # - mkdir -p ~/.conda/envs
   except:
     variables:
       - $UPDATE_PAGES
@@ -91,14 +81,17 @@ test:
     - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
       "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} pytest pytest-cov || true
     - source activate test
-    - mkdir coverage
     # Run tests
+    - PKG_INSTALL_DIR=$(python -c "import proteinsolver; print(proteinsolver.__path__[0])")
     - python -m pytest
       -c setup.cfg
-      --cov="./coverage"
+      --cov="${PKG_INSTALL_DIR}"
       --cov-config=setup.cfg
       --color=yes
       "tests/"
+    # Coverage
+    - mkdir coverage
+    - mv .coverage coverage
   coverage: /^TOTAL.* (\d+\%)/
   dependencies:
     - build
@@ -141,7 +134,7 @@ deploy:
   stage: deploy
   extends: .configure
   script:
-    - anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/*/*.tar.bz2 -u ostrokach-forge --no-progress ;
+    - anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/*/*.tar.bz2 -u ostrokach-forge --no-progress
   dependencies:
     - build
   only:
