@@ -75,7 +75,7 @@ test:
   script:
     # Create conda environment for testing
     - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
-      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} gcc_linux-64 gxx_linux-64 || true
+      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} || true
     - source activate test
     - pip install pytest-cov
     - mkdir coverage
@@ -103,7 +103,7 @@ docs:
   script:
     # Create conda environment for testing
     - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
-      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} gcc_linux-64 gxx_linux-64 nbconvert ipython ipykernel pandoc || true
+      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} nbconvert ipython ipykernel pandoc || true
     - source activate test
     - pip install -q sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables nbsphinx coverage
     # Build docs
