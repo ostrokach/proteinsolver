@@ -15,7 +15,7 @@ setup(
     author_email="alex.strokach@utoronto.ca",
     url="https://gitlab.com/ostrokach/proteinsolver",
     packages=find_packages(exclude=["tests"]),
-    package_data={},
+    package_data={"proteinsolver": ["data/inputs/*.pdb"]},
     include_package_data=True,
     zip_safe=False,
     keywords="proteinsolver",
