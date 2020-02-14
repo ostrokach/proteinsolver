@@ -56,6 +56,72 @@ def get_node_value(net, x, edge_index, edge_attr, num_categories=20):
     return x_proba
 
 
+# === Protein design ===
+
+
+@torch.no_grad()
+def design_sequence(
+    net, data, random_position=False, value_selection_strategy="map", num_categories=None
+):
+    assert value_selection_strategy in ("map", "multinomial", "ref")
+
+    if num_categories is None:
+        num_categories = data.x.max().item()
+
+    if hasattr(data, "batch"):
+        batch_size = data.batch.max().item() + 1
+    else:
+        batch_size = 1
+
+    if value_selection_strategy == "ref":
+        x_ref = data.y if hasattr(data, "y") and data.y is not None else data.x
+
+    x = torch.ones_like(data.x) * num_categories
+    x_proba = torch.zeros_like(x).to(torch.float)
+    index_array_ref = torch.arange(x.size(0))
+    mask_ref = x == num_categories
+    while mask_ref.any():
+        output = net(x, data.edge_index, data.edge_attr)
+        output_proba_ref = torch.softmax(output, dim=1)
+        output_proba_max_ref, _ = output_proba_ref.max(dim=1)
+
+        for i in range(batch_size):
+            mask = mask_ref
+            if batch_size > 1:
+                mask = mask & (data.batch == i)
+
+            index_array = index_array_ref[mask]
+            max_probas = output_proba_max_ref[mask]
+
+            if random_position:
+                selected_residue_subindex = torch.randint(0, max_probas.size(0), (1,)).item()
+                max_proba_index = index_array[selected_residue_subindex]
+            else:
+                selected_residue_subindex = max_probas.argmax().item()
+                max_proba_index = index_array[selected_residue_subindex]
+
+            assert x[max_proba_index] == num_categories
+            assert x_proba[max_proba_index] == 0
+            category_probas = output_proba_ref[max_proba_index]
+
+            if value_selection_strategy == "map":
+                chosen_category_proba, chosen_category = category_probas.max(dim=0)
+            elif value_selection_strategy == "multinomial":
+                chosen_category = torch.multinomial(category_probas, 1).item()
+                chosen_category_proba = category_probas[chosen_category]
+            else:
+                assert value_selection_strategy == "ref"
+                chosen_category = x_ref[max_proba_index]
+                chosen_category_proba = category_probas[chosen_category]
+
+            assert chosen_category != num_categories
+            x[max_proba_index] = chosen_category
+            x_proba[max_proba_index] = chosen_category_proba
+        mask_ref = x == num_categories
+        del output, output_proba_ref, output_proba_max_ref
+    return x.cpu(), x_proba.cpu()
+
+
 @torch.no_grad()
 def get_descendents(net, x, x_proba, edge_index, edge_attr, cutoff):
     index_array = torch.arange(x.size(0))
