@@ -26,6 +26,34 @@ AMINO_ACIDS: List[str] = [
     "H",
 ]
 
+AMINO_ACIDS_ORD: List[int] = [
+    71,
+    86,
+    65,
+    76,
+    73,
+    67,
+    77,
+    70,
+    87,
+    80,
+    68,
+    69,
+    83,
+    84,
+    89,
+    81,
+    78,
+    75,
+    82,
+    72,
+]
+
+assert all(ord(AMINO_ACIDS[i]) == AMINO_ACIDS_ORD[i] for i in range(len(AMINO_ACIDS)))
+
+
+AMINO_ACID_TO_IDX = {aa: i for i, aa in enumerate(AMINO_ACIDS + ["-"])}
+
 
 @njit
 def seq_to_tensor(seq: bytes) -> np.ndarray:
@@ -41,6 +69,5 @@ def seq_to_tensor(seq: bytes) -> np.ndarray:
 
 
 def array_to_seq(array: np.ndarray) -> str:
-    max_idxs = np.argmax(array, 0)
-    seq = "".join(AMINO_ACIDS[i] for i in max_idxs)
+    seq = "".join(AMINO_ACIDS[i] for i in array)
     return seq
