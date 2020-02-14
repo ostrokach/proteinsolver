@@ -8,7 +8,7 @@ RUN apt-get update \
 
 RUN mkdir /env \
     && curl -sS https://storage.googleapis.com/conda-envs/defaults/defaults-v22.tar.gz | tar -xz -C /env \
-    && /bin/bash -c "source /env/bin/activate && conda-unpack && source deactivate"
+    && /bin/bash -c "source /env/bin/activate && conda-unpack && python -m pip install -yq nvidia-ml-py && source deactivate"
 
 ENV USER_NAME=lucky \
     USER_ID=8002 \
