@@ -38,8 +38,6 @@ class ProteinSolverProcess(ctx.Process):  # type: ignore
             if self.cancelled():
                 return
 
-            logger.warning(data.x.data.cpu().numpy())
-
             x, x_proba = design_sequence(
                 net, data, value_selection_strategy="multinomial", num_categories=20
             )

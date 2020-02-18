@@ -21,6 +21,8 @@ class GlobalState:
     proteinsolver_thread: Any  # ProteinSolverThread
     generated_sequences: List[Dict]
     output_folder: Optional[Path]
+    # View
+    view_is_initialized: bool
 
     __slots__ = (
         "net_class",
@@ -34,7 +36,8 @@ class GlobalState:
         "proteinsolver_thread",
         "generated_sequences",
         "output_folder",
+        "view_is_initialized",
     )
 
 
-global_state = GlobalState(None, None, {}, [], [], None, None, None, [], None)
+global_state = GlobalState(None, None, {}, [], [], None, None, None, [], None, False)

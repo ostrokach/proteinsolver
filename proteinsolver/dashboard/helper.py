@@ -1,7 +1,7 @@
 import gzip
 import uuid
 from pathlib import Path
-from typing import List, Mapping
+from typing import List
 
 import numpy as np
 

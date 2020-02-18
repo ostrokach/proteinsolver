@@ -5,6 +5,7 @@ from enum import Enum
 from functools import lru_cache, partial
 
 import ipywidgets as widgets
+import msaview
 import torch
 from IPython.display import HTML, display
 
@@ -45,18 +46,25 @@ class ProteinSolverThread(threading.Thread):
         self.progress_bar: widgets.IntProgress = progress_bar
         self.run_ps_status_out: widgets.Output = run_ps_status_out
         self.msa_view = msa_view
-        self.msa_view.clear_output(wait=True)
         self.run_proteinsolver_button: widgets.Button = run_proteinsolver_button
 
+        self.data = None
         self.num_designs = None
-        self._start_new_design = False
+
         self._run_condition = threading.Condition()
+        self._start_new_design = False
         self._cancel_event = threading.Event()
 
     def start_new_design(self, data, num_designs) -> None:
         with self._run_condition:
+            self.data = data
+            self.data.x = torch.tensor(
+                [AMINO_ACID_TO_IDX[aa] for aa in global_state.target_sequence], dtype=torch.long,
+            )
             self.num_designs = num_designs
             self._start_new_design = True
+            self._cancel_event.clear()
+            assert not self.cancelled()
             self._run_condition.notify()
 
     def run(self):
@@ -64,39 +72,26 @@ class ProteinSolverThread(threading.Thread):
             while True:
                 while not self._start_new_design:
                     self._run_condition.wait()
-
                 self._start_new_design = False
-                self._cancel_event.clear()
 
                 update_run_ps_button_state(self.run_proteinsolver_button, State.DISABLED)
                 self.progress_bar.value = 0
                 self.progress_bar.bar_style = ""
                 self.progress_bar.max = self.num_designs
-                self.msa_view.clear_output(wait=True)
 
-                global_state.generated_sequences = [
-                    MSASeq(0, "Reference", "".join(global_state.reference_sequence), True),
-                    MSASeq(1, "Target", "".join(global_state.target_sequence), True),
-                ]
-                for seq in global_state.generated_sequences:
-                    self.msa_view.append_stdout(f"{seq.name:10s}: {seq.seq}\n")
+                global_state.generated_sequences = []
 
-                data = global_state.data
-                data.x = torch.tensor(
-                    [AMINO_ACID_TO_IDX[aa] for aa in global_state.target_sequence],
-                    dtype=torch.long,
-                )
                 proc = ProteinSolverProcess(
                     net_class=global_state.net_class,
                     state_file=global_state.state_file,
-                    data=data,
+                    data=self.data,
                     num_designs=self.num_designs,
                     net_kwargs=global_state.net_kwargs,
                 )
                 proc.start()
 
                 success = True
-                while len(global_state.generated_sequences) < (self.num_designs + 2):
+                while len(global_state.generated_sequences) < self.num_designs:
                     if self.cancelled():
                         success = False
                         proc.cancel()
@@ -109,21 +104,36 @@ class ProteinSolverThread(threading.Thread):
 
                     if isinstance(design, Exception):
                         logger.error(f"Encountered an exception: ({type(design)} - {design}).")
-                        with self.run_ps_status_out:
-                            display(f"Encountered an exception: ({type(design)} - {design}).")
+                        self.run_ps_status_out.append_stderr(
+                            f"Encountered an exception: ({type(design)} - {design})."
+                        )
                         success = False
                         proc.cancel()
                         break
-                    else:
-                        design.id += 2
-                        global_state.generated_sequences.append(design)
-                        self.progress_bar.value += 1
-                        self.msa_view.append_stdout(f"{design.name:10s}: {design.seq}\n")
+
+                    global_state.generated_sequences.append(design)
+                    self.progress_bar.value += 1
+                    if len(global_state.generated_sequences) < 100:
+                        self.msa_view.value = [
+                            {"id": seq.id, "name": seq.name, "seq": seq.seq}
+                            for seq in reversed(global_state.generated_sequences)
+                        ]
+                    elif len(global_state.generated_sequences) % 100 == 0:
+                        self.msa_view.value = [
+                            {"id": seq.id, "name": seq.name, "seq": seq.seq}
+                            for seq in reversed(global_state.generated_sequences[-100:])
+                        ]
 
                 if success:
                     self.progress_bar.bar_style = "success"
                 else:
                     self.progress_bar.bar_style = "danger"
+
+                if len(global_state.generated_sequences) % 100 != 0:
+                    self.msa_view.value = [
+                        {"id": seq.id, "name": seq.name, "seq": seq.seq}
+                        for seq in reversed(global_state.generated_sequences[-100:])
+                    ]
 
                 proc.join()
                 update_run_ps_button_state(self.run_proteinsolver_button, State.ENABLED)
@@ -156,20 +166,22 @@ def on_run_ps_button_clicked(run_ps_button, num_designs_field):
 
 
 def update_sequence_generation(sequence_generation_out):
+    if global_state.view_is_initialized:
+        return
     sequence_generation_out.clear_output(wait=True)
     html_string = (
         '<p class="myheading" style="margin-top: 3rem">'
         "3. Run ProteinSolver to generate new designs"
         "</p>"
     )
-    sequence_generation_widget = get_or_create_sequence_generation_widget()
+    sequence_generation_widget = create_sequence_generation_widget()
     with sequence_generation_out:
         display(HTML(html_string))
         display(sequence_generation_widget)
+    global_state.view_is_initialized = True
 
 
-# @lru_cache()
-def get_or_create_sequence_generation_widget():
+def create_sequence_generation_widget():
     num_designs_field = widgets.BoundedIntText(
         value=100,
         min=1,
@@ -185,7 +197,7 @@ def get_or_create_sequence_generation_widget():
     update_run_ps_button_state(run_ps_button, State.ENABLED)
     run_ps_button.on_click(partial(on_run_ps_button_clicked, num_designs_field=num_designs_field))
 
-    run_ps_status_out = widgets.Output(layout=widgets.Layout(height="50px"))
+    run_ps_status_out = widgets.Output(layout=widgets.Layout(height="75px"))
 
     progress_bar = widgets.IntProgress(
         value=0,
@@ -197,7 +209,7 @@ def get_or_create_sequence_generation_widget():
         layout=widgets.Layout(width="auto", height="15px"),
     )
 
-    msa_view = widgets.Output(layout=widgets.Layout(width="auto"))
+    msa_view = msaview.MSAView()
 
     # if global_state.proteinsolver_thread is None:
     global_state.proteinsolver_thread = ProteinSolverThread(
@@ -208,7 +220,7 @@ def get_or_create_sequence_generation_widget():
     # The remaining widgets are stateless with respect to sequence generation
 
     gpu_utilization_widget, gpu_error_message = create_gpu_status_widget()
-    gpu_status_out = widgets.Output(layout=widgets.Layout(height="50px"))
+    gpu_status_out = widgets.Output(layout=widgets.Layout(height="75px"))
     if gpu_error_message:
         gpu_status_out.append_stdout(f"<p>GPU monitoring not available ({gpu_error_message}).</p>")
 
