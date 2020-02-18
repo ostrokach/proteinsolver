@@ -6,6 +6,7 @@ from queue import Queue
 from typing import Union
 
 import torch
+
 from proteinsolver.dashboard.msa_view import MSASeq
 from proteinsolver.utils import array_to_seq, design_sequence
 
@@ -25,7 +26,7 @@ class ProteinSolverProcess(ctx.Process):  # type: ignore
         self._cancel_event = ctx.Event()
 
     def run(self) -> None:
-        logger = logging.getLogger(f"protein_solver_process.pid{self.pid}")
+        logger = logging.getLogger(f"protein_solver_process.pid{self.pid}")  # noqa
 
         try:
             net = self._init_network()
