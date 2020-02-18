@@ -2,7 +2,7 @@ import logging
 import queue
 import threading
 from enum import Enum
-from functools import lru_cache, partial
+from functools import partial
 
 import ipywidgets as widgets
 import msaview
@@ -12,7 +12,6 @@ from IPython.display import HTML, display
 from proteinsolver.dashboard import global_state
 from proteinsolver.dashboard.download_button import create_download_button
 from proteinsolver.dashboard.gpu_status import create_gpu_status_widget
-from proteinsolver.dashboard.msa_view import MSASeq
 from proteinsolver.dashboard.ps_process import ProteinSolverProcess
 from proteinsolver.utils import AMINO_ACID_TO_IDX
 
