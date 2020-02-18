@@ -7,8 +7,13 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /env \
-    && curl -sS https://storage.googleapis.com/conda-envs/defaults/defaults-v22.tar.gz | tar -xz -C /env \
-    && /bin/bash -c "source /env/bin/activate && conda-unpack && python -m pip install -yq nvidia-ml-py && source deactivate"
+    && curl -sS https://storage.googleapis.com/conda-envs/defaults/defaults-v25.tar.gz | tar -xz -C /env
+
+RUN /bin/bash -c '\
+    source /env/bin/activate \
+    && conda-unpack \
+    && python -m pip install -yq nvidia-ml-py git+https://gitlab.com/ostrokach/msaview.git \
+    && source deactivate'
 
 ENV USER_NAME=lucky \
     USER_ID=8002 \
