@@ -112,12 +112,11 @@ class ProteinSolverThread(threading.Thread):
 
                     global_state.generated_sequences.append(design)
                     self.progress_bar.value += 1
-                    if len(global_state.generated_sequences) < 100:
-                        self.msa_view.value = [
-                            {"id": seq.id, "name": seq.name, "seq": seq.seq}
-                            for seq in reversed(global_state.generated_sequences)
-                        ]
-                    elif len(global_state.generated_sequences) % 100 == 0:
+                    if (
+                        len(global_state.generated_sequences)
+                        % max(1, len(global_state.generated_sequences) // 5)
+                        == 0
+                    ):
                         self.msa_view.value = [
                             {"id": seq.id, "name": seq.name, "seq": seq.seq}
                             for seq in reversed(global_state.generated_sequences[-100:])
@@ -128,7 +127,11 @@ class ProteinSolverThread(threading.Thread):
                 else:
                     self.progress_bar.bar_style = "danger"
 
-                if len(global_state.generated_sequences) % 100 != 0:
+                if (
+                    len(global_state.generated_sequences)
+                    % max(1, len(global_state.generated_sequences) // 5)
+                    == 0
+                ):
                     self.msa_view.value = [
                         {"id": seq.id, "name": seq.name, "seq": seq.seq}
                         for seq in reversed(global_state.generated_sequences[-100:])
