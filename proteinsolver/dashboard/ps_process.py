@@ -45,7 +45,7 @@ class ProteinSolverProcess(ctx.Process):  # type: ignore
             sum_proba = x_proba.mean().item()
             sum_logproba = x_proba.log().mean().item()
             seq = array_to_seq(x.data.numpy())
-            design = MSASeq(i, f"gen-{i:05d}", seq, proba=sum_proba, logproba=sum_logproba)
+            design = MSASeq(i, f"gen-{i + 1:05d}", seq, proba=sum_proba, logproba=sum_logproba)
             self.output_queue.put(design)
             del x, x_proba
 
