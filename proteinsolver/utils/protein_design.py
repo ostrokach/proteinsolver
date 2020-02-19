@@ -1,8 +1,10 @@
 import heapq
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Tuple
 
 import torch
+import torch.nn as nn
+from torch_geometric.data import Data
 
 
 @torch.no_grad()
@@ -61,8 +63,31 @@ def get_node_value(net, x, edge_index, edge_attr, num_categories=20):
 
 @torch.no_grad()
 def design_sequence(
-    net, data, random_position=False, value_selection_strategy="map", num_categories=None
-):
+    net: nn.Module,
+    data: Data,
+    random_position: bool = False,
+    value_selection_strategy: str = "map",
+    num_categories: int = None,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Generate new sequences.
+
+    Args:
+        net: A trained neural network to use for designing sequences.
+        data: The data on which to base new sequences.
+        random_position: Whether the next position to explore should be selected at random
+            or by selecting the position for which we have the most confident predictions.
+        value_selection_strategy: Controls the strategy for generating new sequences:
+            - "map" - Select the most probable residue each time.
+            - "multinomial" - Sample residues according to the probability assigned
+                by the network.
+            - "ref" - Select the residue provided by the `data.x` reference.
+        num_categories: The number of categories possible.
+            If `None`, assume that the number of categories corresponds to the maximum value
+            in `data.x`.
+
+    Returns:
+        A torch tensor of designed sequences.
+    """
     assert value_selection_strategy in ("map", "multinomial", "ref")
 
     if num_categories is None:
@@ -73,53 +98,87 @@ def design_sequence(
     else:
         batch_size = 1
 
-    if value_selection_strategy == "ref":
-        x_ref = data.y if hasattr(data, "y") and data.y is not None else data.x
-
+    x_ref = data.y if hasattr(data, "y") and data.y is not None else data.x
     x = torch.ones_like(data.x) * num_categories
     x_proba = torch.zeros_like(x).to(torch.float)
-    index_array_ref = torch.arange(x.size(0))
-    mask_ref = x == num_categories
-    while mask_ref.any():
-        output = net(x, data.edge_index, data.edge_attr)
-        output_proba_ref = torch.softmax(output, dim=1)
-        output_proba_max_ref, _ = output_proba_ref.max(dim=1)
 
-        for i in range(batch_size):
-            mask = mask_ref
-            if batch_size > 1:
-                mask = mask & (data.batch == i)
-
-            index_array = index_array_ref[mask]
-            max_probas = output_proba_max_ref[mask]
-
-            if random_position:
-                selected_residue_subindex = torch.randint(0, max_probas.size(0), (1,)).item()
-                max_proba_index = index_array[selected_residue_subindex]
-            else:
-                selected_residue_subindex = max_probas.argmax().item()
-                max_proba_index = index_array[selected_residue_subindex]
-
+    # First, gather probabilities for pre-assigned residues
+    mask_filled = (x_ref != num_categories) & (x == num_categories)
+    while mask_filled.any():
+        for (
+            max_proba_index,
+            chosen_category,
+            chosen_category_proba,
+        ) in _select_residue_for_position(
+            net, x, x_ref, data, batch_size, mask_filled, random_position, "ref",
+        ):
+            assert chosen_category != num_categories
             assert x[max_proba_index] == num_categories
             assert x_proba[max_proba_index] == 0
-            category_probas = output_proba_ref[max_proba_index]
-
-            if value_selection_strategy == "map":
-                chosen_category_proba, chosen_category = category_probas.max(dim=0)
-            elif value_selection_strategy == "multinomial":
-                chosen_category = torch.multinomial(category_probas, 1).item()
-                chosen_category_proba = category_probas[chosen_category]
-            else:
-                assert value_selection_strategy == "ref"
-                chosen_category = x_ref[max_proba_index]
-                chosen_category_proba = category_probas[chosen_category]
-
-            assert chosen_category != num_categories
             x[max_proba_index] = chosen_category
             x_proba[max_proba_index] = chosen_category_proba
-        mask_ref = x == num_categories
-        del output, output_proba_ref, output_proba_max_ref
+        mask_filled = (x_ref != num_categories) & (x == num_categories)
+    assert (x == x_ref).all().item()
+
+    # Next, select residues for unassigned positions
+    mask_empty = x == num_categories
+    while mask_empty.any():
+        for (
+            max_proba_index,
+            chosen_category,
+            chosen_category_proba,
+        ) in _select_residue_for_position(
+            net, x, x_ref, data, batch_size, mask_empty, random_position, value_selection_strategy,
+        ):
+            assert chosen_category != num_categories
+            assert x[max_proba_index] == num_categories
+            assert x_proba[max_proba_index] == 0
+            x[max_proba_index] = chosen_category
+            x_proba[max_proba_index] = chosen_category_proba
+        mask_empty = x == num_categories
+
     return x.cpu(), x_proba.cpu()
+
+
+def _select_residue_for_position(
+    net, x, x_ref, data, batch_size, mask_ref, random_position, value_selection_strategy
+):
+    """Predict a new residue for an unassigned position for each batch in `batch_size`.
+    """
+    assert value_selection_strategy in ("map", "multinomial", "ref")
+
+    output = net(x, data.edge_index, data.edge_attr)
+    output_proba_ref = torch.softmax(output, dim=1)
+    output_proba_max_ref, _ = output_proba_ref.max(dim=1)
+    index_array_ref = torch.arange(x.size(0))
+
+    for i in range(batch_size):
+        mask = mask_ref
+        if batch_size > 1:
+            mask = mask & (data.batch == i)
+
+        index_array = index_array_ref[mask]
+        max_probas = output_proba_max_ref[mask]
+
+        if random_position:
+            selected_residue_subindex = torch.randint(0, max_probas.size(0), (1,)).item()
+            max_proba_index = index_array[selected_residue_subindex]
+        else:
+            selected_residue_subindex = max_probas.argmax().item()
+            max_proba_index = index_array[selected_residue_subindex]
+
+        category_probas = output_proba_ref[max_proba_index]
+
+        if value_selection_strategy == "map":
+            chosen_category_proba, chosen_category = category_probas.max(dim=0)
+        elif value_selection_strategy == "multinomial":
+            chosen_category = torch.multinomial(category_probas, 1).item()
+            chosen_category_proba = category_probas[chosen_category]
+        elif value_selection_strategy == "ref":
+            chosen_category = x_ref[max_proba_index]
+            chosen_category_proba = category_probas[chosen_category]
+
+        yield max_proba_index, chosen_category, chosen_category_proba
 
 
 @torch.no_grad()
