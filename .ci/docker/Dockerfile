@@ -7,12 +7,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /env \
-    && curl -sS https://storage.googleapis.com/conda-envs/defaults/defaults-v25.tar.gz | tar -xz -C /env
+    && curl -sS https://storage.googleapis.com/conda-envs/defaults/defaults-v27.tar.gz | tar -xz -C /env
 
 RUN /bin/bash -c '\
     source /env/bin/activate \
     && conda-unpack \
-    && python -m pip install -yq nvidia-ml-py git+https://gitlab.com/ostrokach/msaview.git \
     && source deactivate'
 
 ENV USER_NAME=lucky \
@@ -34,10 +33,25 @@ RUN JUPYTER_DATA_DIR=$(/env/bin/python -m jupyter --data-dir) \
     && mkdir ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static \
     && echo "hello world" >> ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static/hello.txt
 
-RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/92358653b3c790decba9d51de2e91115297a7e72/proteinsolver-92358653b3c790decba9d51de2e91115297a7e72.tar.gz -O \
-    && tar -xzf proteinsolver-92358653b3c790decba9d51de2e91115297a7e72.tar.gz \
-    && rm proteinsolver-92358653b3c790decba9d51de2e91115297a7e72.tar.gz \
-    && mv proteinsolver-92358653b3c790decba9d51de2e91115297a7e72 proteinsolver
+RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/615afeed044a837db0f09fdf9c3ca9543f65bd89/proteinsolver-615afeed044a837db0f09fdf9c3ca9543f65bd89.tar.gz -O \
+    && tar -xzf proteinsolver-615afeed044a837db0f09fdf9c3ca9543f65bd89.tar.gz \
+    && rm proteinsolver-615afeed044a837db0f09fdf9c3ca9543f65bd89.tar.gz \
+    && mv proteinsolver-615afeed044a837db0f09fdf9c3ca9543f65bd89 proteinsolver
+
+# RUN /bin/bash -c '\
+#     source /env/bin/activate \
+#     && wget --no-verbose https://gitlab.com/kimlab/kmtools/-/archive/bba5e954c2e381ea311cf470e6d564a17307d9b8/kmtools-bba5e954c2e381ea311cf470e6d564a17307d9b8.tar.gz \
+#     && tar -xzf kmtools-bba5e954c2e381ea311cf470e6d564a17307d9b8.tar.gz \
+#     && pushd kmtools-bba5e954c2e381ea311cf470e6d564a17307d9b8 \
+#     && sed -i "s/ext_modules=cythonize(EXTENSIONS),//g" setup.py \
+#     && python -m pip install -q --no-use-pep517 --user . \
+#     && popd \
+#     && source deactivate'
+
+RUN /bin/bash -c '\
+    source /env/bin/activate \
+    && python -m pip install -q --no-use-pep517 -e proteinsolver \
+    && source deactivate'
 
 RUN mkdir -p proteinsolver/notebooks/sudoku_train/c8de7e56 \
     && curl -sS https://storage.googleapis.com/proteinsolver/v0.1/notebooks/sudoku_train/c8de7e56/e1-s400000-d2400000-amv07269.state -o proteinsolver/notebooks/sudoku_train/c8de7e56/e1-s400000-d2400000-amv07269.state \
