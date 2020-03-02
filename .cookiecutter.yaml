@@ -9,7 +9,7 @@ default_context:
     project_slug: proteinsolver
     project_import: proteinsolver
     project_short_description: Learn to solve constraint satisfaction problems (CSPs) from data.
-    version: "0.1.9"
+    version: "0.1.10"
     create_author_file: "y"
     open_source_license: MIT License
     _copy_without_render:
