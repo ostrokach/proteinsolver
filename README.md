@@ -1,10 +1,10 @@
 # ProteinSolver
 
 [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.10?urlpath=lab)
-[![docs](https://img.shields.io/badge/docs-v0.1.10-blue.svg)](https://ostrokach.gitlab.io/proteinsolver/d49e067ac2d5496f8b58f007bc8bd88e/v0.1.10/)
+[![docs](https://img.shields.io/badge/docs-v0.1.10-blue.svg)](https://ostrokach.gitlab.io/proteinsolver/v0.1.10/)
 [![conda](https://img.shields.io/conda/dn/ostrokach-forge/proteinsolver.svg)](https://anaconda.org/ostrokach-forge/proteinsolver/)
 [![pipeline status](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.10/pipeline.svg)](https://gitlab.com/ostrokach/proteinsolver/commits/v0.1.10/)
-[![coverage report](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.10/coverage.svg)](https://ostrokach.gitlab.io/proteinsolver/d49e067ac2d5496f8b58f007bc8bd88e/v0.1.10/htmlcov/)
+[![coverage report](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.10/coverage.svg)](https://ostrokach.gitlab.io/proteinsolver/v0.1.10/htmlcov/)
 
 ## Description
 
