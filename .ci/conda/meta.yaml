@@ -16,6 +16,7 @@ requirements:
   run:
     - python
     - ruamel.yaml >=0.16.0
+    - brotli
     - numpy
     - scipy
     - pandas
