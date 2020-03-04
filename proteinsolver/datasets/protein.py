@@ -3,6 +3,7 @@ import pickle
 from pathlib import Path
 from typing import Iterator, List, Mapping, Union
 
+import numpy as np
 import pyarrow.parquet as pq
 import torch
 import torch_geometric.transforms as T
@@ -204,24 +205,33 @@ def iter_parquet_file(
             yield tup
 
 
-def row_to_data(tup) -> Data:
+def row_to_data(tup, add_reversed_edges=True) -> Data:
     seq = torch.tensor(
         seq_to_tensor(tup.sequence.replace("-", "").encode("ascii")), dtype=torch.long
     )
     if (seq == 20).sum() > 0:
         return None
 
-    row_index = torch.tensor(tup.row_index, dtype=torch.long)
-    col_index = torch.tensor(tup.col_index, dtype=torch.long)
-    edge_attr = torch.tensor(tup.distances, dtype=torch.float).unsqueeze(dim=1)
+    row_index = _to_torch(tup.row_index).to(torch.long)
+    col_index = _to_torch(tup.col_index).to(torch.long)
+    edge_attr = _to_torch(tup.distances).to(torch.float).unsqueeze(dim=1)
 
-    edge_index = torch.stack(
-        [torch.cat([row_index, col_index]), torch.cat([col_index, row_index])], dim=0
-    )
-    edge_attr = torch.cat([edge_attr, edge_attr])
+    # Remove self loops
+    mask = row_index == col_index
+    if mask.any():
+        row_index = row_index[~mask]
+        col_index = col_index[~mask]
+        edge_attr = edge_attr[~mask, :]
+
+    if add_reversed_edges:
+        edge_index = torch.stack(
+            [torch.cat([row_index, col_index]), torch.cat([col_index, row_index])], dim=0
+        )
+        edge_attr = torch.cat([edge_attr, edge_attr])
+    else:
+        edge_index = torch.stack([row_index, col_index], dim=0)
 
     edge_index, edge_attr = remove_nans(edge_index, edge_attr)
-
     data = Data(x=seq, edge_index=edge_index, edge_attr=edge_attr)
     data = data.coalesce()
 
@@ -242,3 +252,12 @@ def remove_nans(edge_index, edge_attr):
         edge_index = edge_index[:, ~na_mask]
         edge_attr = edge_attr[~na_mask]
     return edge_index, edge_attr
+
+
+def _to_torch(data_array):
+    if isinstance(data_array, torch.Tensor):
+        return data_array
+    elif isinstance(data_array, np.ndarray):
+        return torch.from_numpy(data_array)
+    else:
+        return torch.tensor(data_array)
