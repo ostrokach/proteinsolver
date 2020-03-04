@@ -95,7 +95,7 @@ class ProteinInteractionDataset(Dataset):
         data = row_to_data(tup, add_reversed_edges=False)
         return data
 
-    def len(self) -> int:
+    def __len__(self) -> int:
         return sum(reader_size for _, reader_size in self.readers)
 
     def decode_record_batch_partial(self, rb) -> Mapping[str, Any]:
