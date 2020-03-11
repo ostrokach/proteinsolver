@@ -68,6 +68,10 @@ gsutil rsync -r gs://deep-protein-gen/ ./
 
 - `DATAPKG_DATA_DIR` - Location of training and validation data.
 
+## Acknowledgements
+
+<img src="docs/acknowledgements.svg" width="40%" style="display: block; margin-left: auto; margin-right: auto" />
+
 ## References
 
 [![poster](https://img.shields.io/static/v1?label=poster&message=html&color=orange)](https://ostrokach-presentations.gitlab.io/2019-12-13-neurips-poster/7ad67cfdf35a4e3e8346e293dc444074/)
