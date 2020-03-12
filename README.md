@@ -72,7 +72,7 @@ gsutil rsync -r gs://deep-protein-gen/ ./
 ## Acknowledgements
 
 <div align="center">
-<img src="docs/acknowledgements.svg" width="45%" />
+<img src="docs/_static/acknowledgements.svg" width="45%" />
 </div>
 
 ## References
