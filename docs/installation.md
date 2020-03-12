@@ -39,8 +39,7 @@ Once you have a copy of the source, you can install it with:
 python setup.py install
 ```
 
-``` warning:: Using pip to install `proteinsolver` is not recommended since, currently, this method does not install any dependencies.
-```
+***Warning:: Using pip to install `proteinsolver` is not recommended since, currently, this method does not install any dependencies.***
 
 [GitLab repo]: https://gitlab.com/ostrokach/proteinsolver
 [tarball]: https://gitlab.com/ostrokach/proteinsolver/repository/master/archive.tar
