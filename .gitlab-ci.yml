@@ -114,6 +114,7 @@ docs:
     - pip install -q sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables nbsphinx coverage
     # Build docs
     - sphinx-build ${CI_PROJECT_DIR}/docs public
+    - ln -s . public/docs
     # Coverage
     - ls -al
     - coverage report || true
