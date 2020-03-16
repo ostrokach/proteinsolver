@@ -219,4 +219,18 @@ docker-images:
   only:
     variables:
       - $UPDATE_IMAGES
+
+ping-pages-build:
+  stage: custom
+  image:
+    name: ubuntu:18.04
+  script:
+    - curl --request POST
+      --form token="${CI_JOB_TOKEN}"
+      --form ref=develop
+      --form "variables[UPDATE_PAGES]=true"
+      https://gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+  only:
+    variables:
+      - $UPDATE_IMAGES
   
