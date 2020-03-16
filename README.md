@@ -15,12 +15,12 @@ ProteinSolver is a deep neural network which learns to solve (ill-defined) const
 
 The following notebooks can be used to explore the basic functionality of `proteinsolver`.
 
-| Notebook name               | MyBinder                                                                                                                                                                                                                       | Description                                                                                                                                                                                |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Notebook name               | MyBinder                                                                                                                                                                                                                        | Description                                                                                                                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `20_sudoku_demo.ipynb`      | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.12?filepath=notebooks%2F20_sudoku_demo.ipynb)      | Use a pre-trained network to solve a single Sudoku puzzle.                                                                                                                                 |
-| `06_sudoku_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.12?filepath=notebooks%2F06_sudoku_analysis.ipynb)  | Evaluate a network trained to solve Sudoku puzzles using the validation<br>and test datasets.<br>*(This notebook is resource-intensive and is best ran on a machine with a GPU).*          |
+| `06_sudoku_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.12?filepath=notebooks%2F06_sudoku_analysis.ipynb)  | Evaluate a network trained to solve Sudoku puzzles using the validation<br>and test datasets.<br>_(This notebook is resource-intensive and is best ran on a machine with a GPU)._          |
 | `20_protein_demo.ipynb`     | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.12?filepath=notebooks%2F20_protein_demo.ipynb)     | Use a pre-trained network to design sequences for a single protein geometry.                                                                                                               |
-| `06_protein_analysis.ipynb` | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.12?filepath=notebooks%2F06_protein_analysis.ipynb) | Evaluate a network trained to reconstruct protein sequences using the<br>validation and test datasets.<br>*(This notebook is resource-intensive and is best ran on a machine with a GPU).* |
+| `06_protein_analysis.ipynb` | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.12?filepath=notebooks%2F06_protein_analysis.ipynb) | Evaluate a network trained to reconstruct protein sequences using the<br>validation and test datasets.<br>_(This notebook is resource-intensive and is best ran on a machine with a GPU)._ |
 
 Other notebooks in the `notebooks/` directory show how to perform more extensive validations of the networks and how to train new networks.
 
@@ -51,18 +51,18 @@ pip install --editable .
 
 ## Pre-trained models
 
-Pre-trained models can be downloaded using [`gsutil`][gsutil], by running the following command in the root folder of the `proteinsolver` repository:
+Pre-trained models can be downloaded using `wget` by running the following command _in the root folder of the `proteinsolver` repository_:
 
 ```bash
-gsutil rsync -r gs://proteinsolver/v0.1/ ./
+wget -r -nH --reject "index.html*" "http://models.proteinsolver.org/v0.1/"
 ```
 
 ## Training and validation datasets
 
-Data used to train and validate the "proteinsolver" network to solve Sudoku puzzles and reconstruct protein sequences can be downloaded using [`gsutil`][gsutil]. The `DATAPKG_DATA_DIR` environment variable should be set to the folder containing the downloaded files.
+Data used to train and validate the "proteinsolver" network to solve Sudoku puzzles and reconstruct protein sequences can be downloaded from <http://deep-protein-gen.data.proteinsolver.org/>:
 
 ```bash
-gsutil rsync -r gs://deep-protein-gen/ ./
+wget -r -nH --reject "index.html*" "http://deep-protein-gen.data.proteinsolver.org/"
 ```
 
 ## Environment variables
@@ -77,6 +77,4 @@ gsutil rsync -r gs://deep-protein-gen/ ./
 
 ## References
 
-- Alexey Strokach, David Becerra, Carles Corbi, Albert Perez-Riba, Philip M. Kim. *Fast and flexible design of novel proteins using graph neural networks*. https://doi.org/10.1101/868935
-
-[gsutil]: https://cloud.google.com/sdk/install
+- Alexey Strokach, David Becerra, Carles Corbi, Albert Perez-Riba, Philip M. Kim. _Fast and flexible design of novel proteins using graph neural networks_. https://doi.org/10.1101/868935
