@@ -209,7 +209,7 @@ docker-images:
     - /kaniko/executor 
       --context $CI_PROJECT_DIR/.ci/docker
       --dockerfile $CI_PROJECT_DIR/.ci/docker/Dockerfile
-      --destination $CI_REGISTRY_IMAGE:=${IMAGE_TAG}
+      --destination $CI_REGISTRY_IMAGE:${IMAGE_TAG}
   after_script:
     - curl --request POST
       --form token="${CI_JOB_TOKEN}"
