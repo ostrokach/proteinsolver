@@ -1,5 +1,7 @@
 FROM nvidia/cuda:10.1-runtime-ubuntu18.04
 
+ARG PS_VERSION=v0.1.12
+
 RUN apt-get update \
     && apt-get install -yq \
     curl \
@@ -7,7 +9,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /env \
-    && curl -sS https://storage.googleapis.com/conda-envs/defaults/defaults-v27.tar.gz | tar -xz -C /env
+    && curl -sS https://conda-envs.proteinsolver.org/defaults/defaults-v27.tar.gz | tar -xz -C /env
 
 RUN /bin/bash -c '\
     source /env/bin/activate \
@@ -33,32 +35,17 @@ RUN JUPYTER_DATA_DIR=$(/env/bin/python -m jupyter --data-dir) \
     && mkdir ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static \
     && echo "hello world" >> ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static/hello.txt
 
-RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/615afeed044a837db0f09fdf9c3ca9543f65bd89/proteinsolver-615afeed044a837db0f09fdf9c3ca9543f65bd89.tar.gz -O \
-    && tar -xzf proteinsolver-615afeed044a837db0f09fdf9c3ca9543f65bd89.tar.gz \
-    && rm proteinsolver-615afeed044a837db0f09fdf9c3ca9543f65bd89.tar.gz \
-    && mv proteinsolver-615afeed044a837db0f09fdf9c3ca9543f65bd89 proteinsolver
-
-# RUN /bin/bash -c '\
-#     source /env/bin/activate \
-#     && wget --no-verbose https://gitlab.com/kimlab/kmtools/-/archive/bba5e954c2e381ea311cf470e6d564a17307d9b8/kmtools-bba5e954c2e381ea311cf470e6d564a17307d9b8.tar.gz \
-#     && tar -xzf kmtools-bba5e954c2e381ea311cf470e6d564a17307d9b8.tar.gz \
-#     && pushd kmtools-bba5e954c2e381ea311cf470e6d564a17307d9b8 \
-#     && sed -i "s/ext_modules=cythonize(EXTENSIONS),//g" setup.py \
-#     && python -m pip install -q --no-use-pep517 --user . \
-#     && popd \
-#     && source deactivate'
+RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/${PS_VERSION}/proteinsolver-${PS_VERSION}.tar.gz -O \
+    && tar -xzf proteinsolver-${PS_VERSION}.tar.gz \
+    && rm proteinsolver-${PS_VERSION}.tar.gz \
+    && mv proteinsolver-${PS_VERSION} proteinsolver \
+    && cd proteinsolver \
+    && wget -q -r -nH --cut-dirs 1 --reject "index.html*" "http://models.proteinsolver.org/v0.1/"
 
 RUN /bin/bash -c '\
     source /env/bin/activate \
     && python -m pip install -q --no-use-pep517 -e proteinsolver \
     && source deactivate'
-
-RUN mkdir -p proteinsolver/notebooks/sudoku_train/c8de7e56 \
-    && curl -sS https://storage.googleapis.com/proteinsolver/v0.1/notebooks/sudoku_train/c8de7e56/e1-s400000-d2400000-amv07269.state -o proteinsolver/notebooks/sudoku_train/c8de7e56/e1-s400000-d2400000-amv07269.state \
-    && curl -sS https://storage.googleapis.com/proteinsolver/v0.1/notebooks/sudoku_train/c8de7e56/model.py -o proteinsolver/notebooks/sudoku_train/c8de7e56/model.py \
-    && mkdir -p proteinsolver/notebooks/protein_train/191f05de \
-    && curl -sS https://storage.googleapis.com/proteinsolver/v0.1/notebooks/protein_train/191f05de/e53-s1952148-d93703104.state -o proteinsolver/notebooks/protein_train/191f05de/e53-s1952148-d93703104.state \
-    && curl -sS https://storage.googleapis.com/proteinsolver/v0.1/notebooks/protein_train/191f05de/model.py -o proteinsolver/notebooks/protein_train/191f05de/model.py
 
 COPY ./entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
