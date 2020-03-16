@@ -36,7 +36,7 @@ variables:
   except:
     variables:
       - $UPDATE_PAGES
-      - $CI_COMMIT_MESSAGE =~ /\[pages\]/i
+      - $UPDATE_IMAGES
 
 # === Lint ===
 
