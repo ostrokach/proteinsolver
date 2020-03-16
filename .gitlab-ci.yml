@@ -141,6 +141,29 @@ deploy:
   only:
     - tags
 
+trigger-custom-pipelines:
+  stage: deploy
+  image:
+    name: ubuntu:18.04
+  before_script:
+    - apt-get -y -qq update
+    - apt-get -y -qq install curl
+  script:
+    # Update pages
+    - curl --request POST
+      --form token="${CI_JOB_TOKEN}"
+      --form ref=${CI_COMMIT_TAG}
+      --form "variables[UPDATE_PAGES]=true"
+      https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+    # Update images
+    - curl --request POST
+      --form token="${CI_JOB_TOKEN}"
+      --form ref=${CI_COMMIT_TAG}
+      --form "variables[UPDATE_IMAGES]=true"
+      https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+  only:
+    - tags
+
 # === Pages ===
 
 .pages:
@@ -202,7 +225,7 @@ docker-images:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - if [[ ! -z ${CI_COMMIT_TAG} ]] ; then 
       IMAGE_TAG=${CI_COMMIT_TAG} ;
-      else 
+      else
       IMAGE_TAG="latest" ;
       fi
     - echo "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
@@ -210,30 +233,6 @@ docker-images:
       --context $CI_PROJECT_DIR/.ci/docker
       --dockerfile $CI_PROJECT_DIR/.ci/docker/Dockerfile
       --destination $CI_REGISTRY_IMAGE:${IMAGE_TAG}
-  after_script:
-    - curl --request POST
-      --form token="${CI_JOB_TOKEN}"
-      --form ref=develop
-      --form "variables[UPDATE_PAGES]=true"
-      https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
   only:
     variables:
       - $UPDATE_IMAGES
-
-ping-pages-build:
-  stage: custom
-  image:
-    name: ubuntu:18.04
-  before_script:
-    - apt-get update
-    - apt-get -y -q install curl
-  script:
-    - curl --request POST
-      --form token="${CI_JOB_TOKEN}"
-      --form ref=develop
-      --form "variables[UPDATE_PAGES]=true"
-      https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
-  only:
-    variables:
-      - $UPDATE_IMAGES
-  
