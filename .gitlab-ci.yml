@@ -225,8 +225,8 @@ ping-pages-build:
   image:
     name: ubuntu:18.04
   before_script:
-    - sudo apt-get update
-    - sudo apt-get -y -q install curl
+    - apt-get update
+    - apt-get -y -q install curl
   script:
     - curl --request POST
       --form token="${CI_JOB_TOKEN}"
