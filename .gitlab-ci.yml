@@ -211,14 +211,12 @@ docker-images:
       --dockerfile $CI_PROJECT_DIR/.ci/docker/Dockerfile
       --destination $CI_REGISTRY_IMAGE:=${IMAGE_TAG}
   after_script:
-    - echo done
-  only:
     - curl --request POST
       --form token="${CI_JOB_TOKEN}"
       --form ref=develop
       --form "variables[UPDATE_PAGES]=true"
       https://gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
-    only:
+  only:
     variables:
       - $UPDATE_IMAGES
   
