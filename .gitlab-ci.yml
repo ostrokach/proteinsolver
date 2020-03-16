@@ -205,14 +205,20 @@ docker-images:
       else 
       IMAGE_TAG="latest" ;
       fi
-    - echo "${IMAGE_TAG}"
+    - echo "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
     - /kaniko/executor 
       --context $CI_PROJECT_DIR/.ci/docker
       --dockerfile $CI_PROJECT_DIR/.ci/docker/Dockerfile
       --destination $CI_REGISTRY_IMAGE:=${IMAGE_TAG}
+  after_script:
+    - echo done
   only:
-    - tags
-  only:
+    - curl --request POST
+      --form token="${CI_JOB_TOKEN}"
+      --form ref=develop
+      --form "variables[UPDATE_PAGES]=true"
+      https://gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+    only:
     variables:
       - $UPDATE_IMAGES
   
