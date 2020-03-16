@@ -2,8 +2,8 @@ FROM nvidia/cuda:10.1-runtime-ubuntu18.04
 
 ARG PS_VERSION=v0.1.12
 
-RUN apt-get update \
-    && apt-get install -yq \
+RUN apt-get -qq update \
+    && apt-get -y -qq install \
     curl \
     wget \
     && rm -rf /var/lib/apt/lists/*
