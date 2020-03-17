@@ -250,6 +250,7 @@ docker-images:
       IMAGE_TAG="latest" ;
       fi
     - echo "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
+    - docker login registry.gitlab.com -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
     - docker build -t "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}" .ci/docker/
     - docker push "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
   only:
