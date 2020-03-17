@@ -163,7 +163,11 @@ trigger-custom-pipelines:
       https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
   only:
     - tags
-
+  except:
+    variables:
+      - $UPDATE_PAGES
+      - $UPDATE_IMAGES
+  
 # === Pages ===
 
 .pages:
