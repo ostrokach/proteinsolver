@@ -216,7 +216,7 @@ pages:
     variables:
       - $UPDATE_PAGES
 
-docker-images:
+.docker-images:
   stage: custom
   image:
     name: gcr.io/kaniko-project/executor:debug
@@ -236,3 +236,23 @@ docker-images:
   only:
     variables:
       - $UPDATE_IMAGES
+
+docker-images:
+  stage: custom
+  image:
+    name: docker:latest
+  services:
+    - docker:dind
+  script:
+    - if [[ ! -z ${CI_COMMIT_TAG} ]] ; then 
+      IMAGE_TAG=${CI_COMMIT_TAG} ;
+      else
+      IMAGE_TAG="latest" ;
+      fi
+    - echo "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
+    - docker build -t "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}" .ci/docker/
+    - docker push "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
+  only:
+    variables:
+      - $UPDATE_IMAGES
+      
