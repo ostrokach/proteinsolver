@@ -1,5 +1,12 @@
 # Deployment
 
+- [Deploying to local machines](#deploying-to-local-machines)
+  - [Sudoku web server](#sudoku-web-server)
+  - [Protein design web server](#protein-design-web-server)
+- [Deploying to Kubernetes using Knative](#deploying-to-kubernetes-using-knative)
+  - [Sudoku web server](#sudoku-web-server-1)
+  - [Protein design web server](#protein-design-web-server-1)
+
 ## Deploying to local machines
 
 ### Sudoku web server
@@ -48,17 +55,17 @@ spec:
         autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
-      - name: user-container
-        image: registry.gitlab.com/ostrokach/proteinsolver:v0.1.14
-        ports:
-        - containerPort: 8080
-        env:
-        - name: NOTEBOOK_PATH
-          value: proteinsolver/notebooks/30_sudoku_dashboard.ipynb
-        resources:
-          limits:
-            cpu: '1.8'
-            memory: 12Gi
+        - name: user-container
+          image: registry.gitlab.com/ostrokach/proteinsolver:v0.1.14
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NOTEBOOK_PATH
+              value: proteinsolver/notebooks/30_sudoku_dashboard.ipynb
+          resources:
+            limits:
+              cpu: "1.8"
+              memory: 12Gi
       timeoutSeconds: 600
       containerConcurrency: 12
 ```
@@ -94,18 +101,18 @@ spec:
         autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
-      - name: user-container
-        image: registry.gitlab.com/ostrokach/proteinsolver:v0.1.14
-        ports:
-        - containerPort: 8080
-        env:
-        - name: NOTEBOOK_PATH
-          value: proteinsolver/notebooks/30_design_dashboard.ipynb
-        resources:
-          limits:
-            cpu: '7'
-            memory: 24Gi
-            nvidia.com/gpu: '1'
+        - name: user-container
+          image: registry.gitlab.com/ostrokach/proteinsolver:v0.1.14
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NOTEBOOK_PATH
+              value: proteinsolver/notebooks/30_design_dashboard.ipynb
+          resources:
+            limits:
+              cpu: "7"
+              memory: 24Gi
+              nvidia.com/gpu: "1"
       timeoutSeconds: 600
       containerConcurrency: 8
 ```
