@@ -1,1 +1,1 @@
-FROM registry.gitlab.com/ostrokach/proteinsolver:v0.1.12
+FROM registry.gitlab.com/ostrokach/proteinsolver:v0.1.13
