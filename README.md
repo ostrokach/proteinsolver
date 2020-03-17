@@ -54,7 +54,7 @@ pip install --editable .
 Pre-trained models can be downloaded using `wget` by running the following command _in the root folder of the `proteinsolver` repository_:
 
 ```bash
-wget -r -nH --reject "index.html*" "http://models.proteinsolver.org/v0.1/"
+wget -r -nH --cut-dirs 1 --reject "index.html*" "http://models.proteinsolver.org/v0.1/"
 ```
 
 ## Training and validation datasets
@@ -77,4 +77,4 @@ wget -r -nH --reject "index.html*" "http://deep-protein-gen.data.proteinsolver.o
 
 ## References
 
-- Alexey Strokach, David Becerra, Carles Corbi, Albert Perez-Riba, Philip M. Kim. _Fast and flexible design of novel proteins using graph neural networks_. https://doi.org/10.1101/868935
+- Alexey Strokach, David Becerra, Carles Corbi-Verge, Albert Perez-Riba, Philip M. Kim. _Fast and flexible design of novel proteins using graph neural networks_. https://doi.org/10.1101/868935
