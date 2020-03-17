@@ -10,6 +10,7 @@ Contents
    readme
    installation
    usage
+   deployment
    authors
 
 .. toctree::
