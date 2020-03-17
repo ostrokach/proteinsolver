@@ -77,4 +77,4 @@ wget -r -nH --reject "index.html*" "http://deep-protein-gen.data.proteinsolver.o
 
 ## References
 
-- Alexey Strokach, David Becerra, Carles Corbi-Verge, Albert Perez-Riba, Philip M. Kim. _Fast and flexible design of novel proteins using graph neural networks_. https://doi.org/10.1101/868935
+- Alexey Strokach, David Becerra, Carles Corbi-Verge, Albert Perez-Riba, Philip M. Kim. _Fast and flexible design of novel proteins using graph neural networks_. <https://doi.org/10.1101/868935>
