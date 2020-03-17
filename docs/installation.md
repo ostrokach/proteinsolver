@@ -9,7 +9,7 @@ conda create -n proteinsolver -c conda-forge -c kimlab -c ostrokach-forge protei
 conda activate proteinsolver
 ```
 
-This is the preferred method to install `proteinsolver`, as it will always install the most recent stable release, including all dependencies.
+This is the preferred method to install `proteinsolver`, as it will always install the most recent stable release and will also install all dependencies.
 
 If you don't have [conda] installed, this [Python installation guide] can guide
 you through the process.
@@ -39,7 +39,7 @@ Once you have a copy of the source, you can install it with:
 python setup.py install
 ```
 
-***Warning:: Using pip to install `proteinsolver` is not recommended since, currently, this method does not install any dependencies.***
+***Warning: Using `pip` to install `proteinsolver` is not recommended since this method does not install the required dependencies.***
 
 [GitLab repo]: https://gitlab.com/ostrokach/proteinsolver
 [tarball]: https://gitlab.com/ostrokach/proteinsolver/repository/master/archive.tar
