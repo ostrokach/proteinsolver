@@ -16,10 +16,10 @@ RUN /bin/bash -c '\
     && conda-unpack \
     && source deactivate'
 
-ENV USER_NAME=lucky \
-    USER_ID=8002 \
-    GROUP_NAME=luckyg \
-    GROUP_ID=7300
+ENV USER_NAME=jovyan \
+    USER_ID=1000 \
+    GROUP_NAME=jovyan \
+    GROUP_ID=1000
 
 RUN groupadd -g ${GROUP_ID} ${GROUP_NAME} \
     && useradd --no-log-init --create-home -g ${GROUP_NAME} -u ${USER_ID} ${USER_NAME}
