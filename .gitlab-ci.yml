@@ -17,7 +17,15 @@ variables:
 
 # === Configurations ===
 
+.skip-custom-pipelines:
+  except:
+    variables:
+      - $UPDATE_PAGES
+      - $UPDATE_IMAGES
+
 .configure:
+  extends:
+    - .skip-custom-pipelines
   before_script:
     # Set conda envs and pkgs dirs
     - |
@@ -33,16 +41,13 @@ variables:
         - salilab
         - omnia
       EOF
-  except:
-    variables:
-      - $UPDATE_PAGES
-      - $UPDATE_IMAGES
 
 # === Lint ===
 
 lint:
   stage: linting
-  extends: .configure
+  extends:
+    - .configure
   script:
     - conda create -n lint -q "python=${PYTHON_VERSION}" isort toml flake8 mypy black
     - source activate lint
@@ -57,7 +62,8 @@ lint:
 
 build:
   stage: build
-  extends: .configure
+  extends:
+    - .configure
   script:
     - conda install -yq conda conda-build conda-verify conda-forge-pinning
     - cd "${CI_PROJECT_DIR}/.ci/conda"
@@ -74,7 +80,8 @@ build:
 
 test:
   stage: test
-  extends: .configure
+  extends:
+    - .configure
   script:
     # Create conda environment for testing
     - conda update -yq conda
@@ -104,7 +111,8 @@ test:
 # NB: Has to be called "docs" for the pages script to work.
 docs:
   stage: doc
-  extends: .configure
+  extends:
+    - .configure
   script:
     # Create conda environment for testing
     - conda update -yq conda
@@ -133,7 +141,8 @@ docs:
 
 deploy:
   stage: deploy
-  extends: .configure
+  extends:
+    - .configure
   script:
     - anaconda -t $ANACONDA_TOKEN upload $CI_PROJECT_DIR/conda-bld/*/*.tar.bz2 -u ostrokach-forge --no-progress
   dependencies:
@@ -143,6 +152,8 @@ deploy:
 
 trigger-custom-pipelines:
   stage: deploy
+  extends:
+    - .skip-custom-pipelines
   image:
     name: ubuntu:18.04
   before_script:
@@ -163,39 +174,8 @@ trigger-custom-pipelines:
       https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
   only:
     - tags
-  except:
-    variables:
-      - $UPDATE_PAGES
-      - $UPDATE_IMAGES
-  
-# === Pages ===
 
-.pages:
-  before_script:
-    - sudo yum update -y -q
-    - sudo yum install -y -q unzip
-    - pip install jinja2 python-gitlab
-  script:
-    # Set environment variables
-    - export OUTPUT_DIR="./public/"
-    # Add current docs to public
-    - mv -f public latest || true
-    - mkdir -p ${OUTPUT_DIR}
-    - mv -f latest ${OUTPUT_DIR}/latest || true
-    - if [[ -n ${CI_TAG_NAME} && -d ${OUTPUT_DIR}/latest ]] ; then
-      cp -r ${OUTPUT_DIR}/latest ${OUTPUT_DIR}/${CI_TAG_NAME} ;
-      fi
-    # Download all previous docs
-    - python .ci/pages/download_docs.py
-      --project-id ${CI_PROJECT_ID}
-      --job-name docs
-      --private-token ${CI_DOCS_TOKEN}
-      --output-dir ${OUTPUT_DIR}
-  needs:
-    - docs
-  artifacts:
-    paths:
-      - public
+# === Custom pipelines ===
 
 pages:
   stage: custom
@@ -220,27 +200,6 @@ pages:
     variables:
       - $UPDATE_PAGES
 
-.docker-images:
-  stage: custom
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  script:
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - if [[ ! -z ${CI_COMMIT_TAG} ]] ; then 
-      IMAGE_TAG=${CI_COMMIT_TAG} ;
-      else
-      IMAGE_TAG="latest" ;
-      fi
-    - echo "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
-    - /kaniko/executor 
-      --context $CI_PROJECT_DIR/.ci/docker
-      --dockerfile $CI_PROJECT_DIR/.ci/docker/Dockerfile
-      --destination $CI_REGISTRY_IMAGE:${IMAGE_TAG}
-  only:
-    variables:
-      - $UPDATE_IMAGES
-
 docker-images:
   stage: custom
   image:
@@ -248,7 +207,7 @@ docker-images:
   services:
     - docker:dind
   script:
-    - if [[ ! -z ${CI_COMMIT_TAG} ]] ; then 
+    - if [[ ! -z ${CI_COMMIT_TAG} ]] ; then
       IMAGE_TAG=${CI_COMMIT_TAG} ;
       else
       IMAGE_TAG="latest" ;
@@ -260,4 +219,3 @@ docker-images:
   only:
     variables:
       - $UPDATE_IMAGES
-      
