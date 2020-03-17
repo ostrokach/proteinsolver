@@ -9,7 +9,7 @@ RUN apt-get -qq update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /env \
-    && curl -sS https://conda-envs.proteinsolver.org/defaults/defaults-v27.tar.gz | tar -xz -C /env
+    && curl -sS https://conda-envs.proteinsolver.org/defaults/defaults-v28.tar.gz | tar -xz -C /env
 
 RUN /bin/bash -c '\
     source /env/bin/activate \
