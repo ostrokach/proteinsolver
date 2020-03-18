@@ -60,7 +60,7 @@ def main(args):
     all_jobs = [j for j in all_jobs if j.folder is not None]
     version_lst = jobs_to_version_lst(all_jobs)
     with output_path.joinpath("versions.json").open("wt") as fout:
-        json.dump(fout, version_lst, sort_keys=True, indent=4)
+        json.dump(version_lst, fout, sort_keys=True, indent=4)
     index_source = render_html(all_jobs)
     write_index_files(index_source, output_path)
 
