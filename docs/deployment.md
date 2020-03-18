@@ -15,7 +15,7 @@
 docker run -d --restart unless-stopped -p 8080:8080 \
   --env PORT=8080 \
   --env NOTEBOOK_PATH=proteinsolver/notebooks/30_sudoku_dashboard.ipynb \
-  registry.gitlab.com/ostrokach/proteinsolver:v0.1.14
+  registry.gitlab.com/ostrokach/proteinsolver:v0.1.15
 ```
 
 ### Protein design web server
@@ -25,7 +25,7 @@ docker run -d --restart unless-stopped -p 8080:8080 \
   --env PORT=8080 \
   --env NOTEBOOK_PATH=proteinsolver/notebooks/30_design_dashboard.ipynb \
   --gpus '"device=0"' \
-  registry.gitlab.com/ostrokach/proteinsolver:v0.1.14
+  registry.gitlab.com/ostrokach/proteinsolver:v0.1.15
 ```
 
 ## Deploying to Kubernetes using Knative
@@ -56,7 +56,7 @@ spec:
     spec:
       containers:
         - name: user-container
-          image: registry.gitlab.com/ostrokach/proteinsolver:v0.1.14
+          image: registry.gitlab.com/ostrokach/proteinsolver:v0.1.15
           ports:
             - containerPort: 8080
           env:
@@ -102,7 +102,7 @@ spec:
     spec:
       containers:
         - name: user-container
-          image: registry.gitlab.com/ostrokach/proteinsolver:v0.1.14
+          image: registry.gitlab.com/ostrokach/proteinsolver:v0.1.15
           ports:
             - containerPort: 8080
           env:

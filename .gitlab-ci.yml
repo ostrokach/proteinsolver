@@ -12,7 +12,7 @@ stages:
 # === Variables ===
 
 variables:
-  PACKAGE_VERSION: "0.1.14"
+  PACKAGE_VERSION: "0.1.15"
   PYTHON_VERSION: "3.7"
 
 # === Configurations ===
