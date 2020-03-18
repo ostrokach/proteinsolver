@@ -119,7 +119,8 @@ docs:
     - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
       "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} nbconvert ipython ipykernel pandoc || true
     - source activate test
-    - pip install -q sphinx sphinx_rtd_theme recommonmark sphinx-markdown-tables nbsphinx coverage
+    - pip install -q sphinx sphinx_rtd_theme msmb_theme recommonmark sphinx-markdown-tables
+      nbsphinx coverage
     # Build docs
     - sphinx-build ${CI_PROJECT_DIR}/docs public
     - ln -s . public/docs
