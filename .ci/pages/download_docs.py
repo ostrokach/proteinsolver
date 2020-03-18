@@ -212,7 +212,7 @@ def render_html(job_list: List[JobInfo]) -> str:
     with PROJECT_ROOT.joinpath("templates", "index.html").open("rt") as fin:
         template_src = fin.read()
     template = Template(template_src)
-    source = template.render(items=job_list)
+    source = template.render(URL=URL, items=job_list)
     return source
 
 
