@@ -39,7 +39,12 @@ Once you have a copy of the source, you can install it with:
 python setup.py install
 ```
 
-***Warning: Using `pip` to install `proteinsolver` is not recommended since this method does not install the required dependencies.***
+```eval_rst
+
+.. note::
+
+  Using ``pip`` to install ``proteinsolver`` is not recommended since this method does not install the required dependencies.
+```
 
 [GitLab repo]: https://gitlab.com/ostrokach/proteinsolver
 [tarball]: https://gitlab.com/ostrokach/proteinsolver/repository/master/archive.tar

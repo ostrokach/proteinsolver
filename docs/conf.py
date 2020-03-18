@@ -17,6 +17,7 @@ import os
 import msmb_theme
 import sphinx_rtd_theme
 from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
 
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
@@ -26,7 +27,7 @@ from recommonmark.parser import CommonMarkParser
 
 # Get the project root dir, which is the parent dir of this
 cwd = os.getcwd()
-project_root = os.path.dirname(cwd)
+project_root = os.path.dirame(cwd)
 
 # Insert the project root dir as the first element in the PYTHONPATH.
 # This lets us ensure that the source package is imported, and that its
@@ -37,9 +38,24 @@ import proteinsolver
 
 # -- General configuration ---------------------------------------------
 
+gitlab_doc_root = "https://gitlab.com/ostrokach/proteinsolver/-/tree/master/"
+
 
 def setup(app):
     app.add_stylesheet("css/custom.css")
+    app.add_config_value(
+        "recommonmark_config",
+        {
+            "url_resolver": lambda url: gitlab_doc_root + url,
+            "auto_toc_tree_section": "Contents",
+            "enable_math": False,
+            "enable_inline_math": False,
+            "enable_eval_rst": True,
+            "enable_auto_doc_ref": True,
+        },
+        True,
+    )
+    app.add_transform(AutoStructify)
 
 
 # If your documentation needs a minimal Sphinx version, state it here.
