@@ -1,12 +1,5 @@
 # Deployment
 
-- [Deploying to local machines](#deploying-to-local-machines)
-  - [Sudoku web server](#sudoku-web-server)
-  - [Protein design web server](#protein-design-web-server)
-- [Deploying to Kubernetes using Knative](#deploying-to-kubernetes-using-knative)
-  - [Sudoku web server](#sudoku-web-server-1)
-  - [Protein design web server](#protein-design-web-server-1)
-
 ## Deploying to local machines
 
 ### Sudoku web server
