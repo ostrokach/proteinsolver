@@ -2,6 +2,7 @@ import argparse
 import concurrent.futures
 import functools
 import itertools
+import json
 import logging
 import os
 import re
@@ -13,13 +14,14 @@ import tempfile
 import zipfile
 from datetime import datetime
 from pathlib import Path
-from typing import List, NamedTuple, Optional, Set, Union
+from typing import Any, Dict, List, NamedTuple, Optional, Set, Union
 
 import gitlab
 from jinja2 import Template
 
 logger = logging.getLogger()
 PROJECT_ROOT = Path(__file__).parent
+URL = "https://docs.proteinsolver.org"
 
 
 class JobInfo(NamedTuple):
@@ -55,6 +57,10 @@ def main(args):
         previous_jobs = []
 
     all_jobs = sort_jobs_by_tag(existing_jobs + previous_jobs)
+    all_jobs = [j for j in all_jobs if j.folder is not None]
+    version_lst = jobs_to_version_lst(all_jobs)
+    with output_path.joinpath("versions.json").open("wt") as fout:
+        json.dump(fout, version_lst, sort_keys=True, indent=4)
     index_source = render_html(all_jobs)
     write_index_files(index_source, output_path)
 
@@ -205,10 +211,22 @@ def _extract_artifact(
 def render_html(job_list: List[JobInfo]) -> str:
     with PROJECT_ROOT.joinpath("templates", "index.html").open("rt") as fin:
         template_src = fin.read()
-    job_list = [j for j in job_list if j.folder is not None]
     template = Template(template_src)
     source = template.render(items=job_list)
     return source
+
+
+def jobs_to_version_lst(all_jobs: List[JobInfo]) -> List[Dict[str, Any]]:
+    version_lst = []
+    for i, job_info in enumerate(all_jobs):
+        version = {
+            "latest": i == 0,
+            "version": job_info.tag_name,
+            "display": job_info.tag_name,
+            "url": f"{URL}/{job_info.tag_name}/",
+        }
+        version_lst.append(version)
+    return version_lst
 
 
 def write_index_files(index_source: str, output_path: Path):
