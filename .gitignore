@@ -81,6 +81,7 @@ target/
 # Saved models
 notebooks/**
 !notebooks/*.ipynb
+notebooks_v2
 
 report/index.html
 node_modules
