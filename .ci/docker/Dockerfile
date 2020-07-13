@@ -1,6 +1,6 @@
 FROM nvidia/cuda:10.1-runtime-ubuntu18.04
 
-ARG PS_VERSION=v0.1.18
+ARG PS_VERSION=da13d6c89630dc643124a9918c5098aa7125ad48
 
 RUN apt-get -qq update \
     && apt-get -y -qq install \
