@@ -265,8 +265,7 @@ def get_descendents(net, x, x_proba, edge_index, edge_attr, cutoff):
 class PrioritizedItem:
     p: float
     x: Any = field(compare=False)
-    total_proba: float = field(compare=False)
-    total_logproba: float = field(compare=False)
+    x_proba: float = field(compare=False)
 
 
 @torch.no_grad()
