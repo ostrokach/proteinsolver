@@ -51,7 +51,6 @@ def setup(app):
             "enable_math": False,
             "enable_inline_math": False,
             "enable_eval_rst": True,
-            "enable_auto_doc_ref": True,
         },
         True,
     )
@@ -75,6 +74,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
+    "recommonmark",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
