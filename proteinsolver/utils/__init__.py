@@ -1,5 +1,6 @@
 # isort: skip
 from .common import *
+from .scatter import *
 from .network import *
 from .protein_design import *
 from .protein_sequence import *
