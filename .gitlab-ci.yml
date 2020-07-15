@@ -98,8 +98,7 @@ test:
       "tests/"
     # Coverage
     - mkdir coverage
-    - mv .coverage coverage
-  coverage: /^TOTAL.* (\d+\%)/
+    - mv .coverage coverage/.coverage.all
   dependencies:
     - build
   artifacts:
@@ -125,8 +124,6 @@ docs:
     - sphinx-build ${CI_PROJECT_DIR}/docs public
     - ln -s . public/docs
     # Coverage
-    - ls -al
-    - ls -al coverage/
     - coverage combine coverage/
     - coverage report
     - coverage html
