@@ -126,9 +126,11 @@ docs:
     - ln -s . public/docs
     # Coverage
     - ls -al
-    - coverage report || true
-    - coverage html || true
-    - mv htmlcov public/ || true
+    - ls -al coverage/
+    - coverage combine coverage/
+    - coverage report
+    - coverage html
+    - mv htmlcov public/
   coverage: /^TOTAL.* (\d+\%)/
   dependencies:
     - build
