@@ -2,10 +2,10 @@
 
 [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.20)
 [![docs](https://img.shields.io/badge/docs-v0.1.20-blue.svg)](https://ostrokach.gitlab.io/proteinsolver/v0.1.20/)
-[![poster](https://img.shields.io/static/v1?label=poster&message=html&color=orange)](https://ostrokach-presentations.gitlab.io/2019-12-13-neurips-poster/7ad67cfdf35a4e3e8346e293dc444074/)
+[![poster](https://img.shields.io/static/v1?label=poster&message=html&color=orange)](https://ostrokach-posters.gitlab.io/2019-12-13-neurips-poster/7ad67cfdf35a4e3e8346e293dc444074/)
 [![conda](https://img.shields.io/conda/dn/ostrokach-forge/proteinsolver.svg)](https://anaconda.org/ostrokach-forge/proteinsolver/)
 [![pipeline status](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.20/pipeline.svg)](https://gitlab.com/ostrokach/proteinsolver/commits/v0.1.20/)
-[![coverage report](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.20/coverage.svg)](https://ostrokach.gitlab.io/proteinsolver/v0.1.20/htmlcov/)
+[![coverage report](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.20/coverage.svg?job=docs)](https://ostrokach.gitlab.io/proteinsolver/v0.1.20/htmlcov/)
 
 ## Description
 
