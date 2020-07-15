@@ -283,7 +283,7 @@ def design_protein(net, x, edge_index, edge_attr, results, cutoff):
                 f"heap size: {len(heap):7d}; results size: {len(results)}"
             )
         if not (item.x == 20).any():
-            results.append(item.cpu())
+            results.append(item)
         else:
             children = get_descendents(net, item.x, item.x_proba, edge_index, edge_attr, cutoff)
             for x, x_proba in children:
