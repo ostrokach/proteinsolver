@@ -24,6 +24,16 @@ The following notebooks can be used to explore the basic functionality of `prote
 
 Other notebooks in the `notebooks/` directory show how to perform more extensive validations of the networks and how to train new networks.
 
+## Docker images
+
+Docker images with all required dependencies are provided at: <https://gitlab.com/ostrokach/proteinsolver/container_registry>.
+
+To evaluate a proteinsolver network from a Jupyter notebook, we can run the following:
+
+```bash
+docker run -it --rm -p 8000:8000 registry.gitlab.com/ostrokach/proteinsolver:v0.1.20 jupyter notebook --ip 0.0.0.0 --port 8000
+```
+
 ## Installation
 
 We recommend installing `proteinsolver` into a clean conda environment using the following command:
