@@ -51,7 +51,7 @@ lint:
   script:
     - conda create -n lint -q "python=${PYTHON_VERSION}" isort toml flake8 mypy black
     - source activate lint
-    - python -m isort -p ${CI_PROJECT_NAME} -c
+    - python -m isort ${CI_PROJECT_NAME} --check --diff
     - python -m flake8
     - python -m black --config pyproject.toml --check .
     # MyPy does not support namespace packages until this issue gets resolved:
