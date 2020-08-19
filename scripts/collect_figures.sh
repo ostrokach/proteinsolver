@@ -3,6 +3,7 @@
 set -ev
 
 rsync -av \
-    --include="*/" --include="*.svg" --include="*.png" --include="*.pdf" --exclude="*" \
-    --prune-empty-dirs \
-    ./notebooks/ ./public/figures/
+    --exclude=".ipynb_checkpoints" --exclude="static/" --include="*/" --include="*.svg" --include="*.png" --include="*.pdf" --exclude="*" \
+    --prune-empty-dirs --delete \
+    ./notebooks/ ./docs/images/
+
