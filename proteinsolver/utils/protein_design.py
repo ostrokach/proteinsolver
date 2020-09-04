@@ -156,7 +156,7 @@ def design_sequence(
             chosen_category,
             chosen_category_proba,
         ) in _select_residue_for_position(
-            net, x, x_ref, data, batch_size, mask_filled, random_position, "ref",
+            net, x, x_ref, data, batch_size, mask_filled, random_position, "ref"
         ):
             assert chosen_category != num_categories
             assert x[max_proba_index] == num_categories
@@ -174,7 +174,7 @@ def design_sequence(
             chosen_category,
             chosen_category_proba,
         ) in _select_residue_for_position(
-            net, x, x_ref, data, batch_size, mask_empty, random_position, value_selection_strategy,
+            net, x, x_ref, data, batch_size, mask_empty, random_position, value_selection_strategy
         ):
             assert chosen_category != num_categories
             assert x[max_proba_index] == num_categories
@@ -189,8 +189,7 @@ def design_sequence(
 def _select_residue_for_position(
     net, x, x_ref, data, batch_size, mask_ref, random_position, value_selection_strategy
 ):
-    """Predict a new residue for an unassigned position for each batch in `batch_size`.
-    """
+    """Predict a new residue for an unassigned position for each batch in `batch_size`."""
     assert value_selection_strategy in ("map", "multinomial", "ref")
 
     output = net(x, data.edge_index, data.edge_attr)
@@ -270,8 +269,7 @@ class PrioritizedItem:
 
 @torch.no_grad()
 def design_protein(net, x, edge_index, edge_attr, results, cutoff):
-    """Design protein sequences using a search strategy.
-    """
+    """Design protein sequences using a search strategy."""
     x_proba = torch.ones_like(x).to(torch.float) * cutoff
     heap = [PrioritizedItem(0, x, x_proba)]
     i = 0

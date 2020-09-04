@@ -100,32 +100,32 @@ class SparseMultiheadAttention(nn.Module):
         self, query, key, value, indices, key_padding_mask=None, need_weights=True, attn_mask=None
     ):
         r"""
-    Args:
-        query, key, value: map a query and a set of key-value pairs to an output.
-            See "Attention Is All You Need" for more details.
-        key_padding_mask: if provided, specified padding elements in the key will
-            be ignored by the attention. This is an binary mask. When the value is True,
-            the corresponding value on the attention layer will be filled with -inf.
-        need_weights: output attn_output_weights.
-        attn_mask: mask that prevents attention to certain positions. This is an additive mask
-            (i.e. the values will be added to the attention layer).
-    Shape:
-        Inputs:
-        - query: :math:`(L, N, E)` where L is the target sequence length, N is the batch size, E is
-          the embedding dimension.
-        - key: :math:`(S, N, E)`, where S is the source sequence length, N is the batch size, E is
-          the embedding dimension.
-        - value: :math:`(S, N, E)` where S is the source sequence length, N is the batch size, E is
-          the embedding dimension.
-        - key_padding_mask: :math:`(N, S)`, ByteTensor, where N is the batch size, S is the source
-          sequence length.
-        - attn_mask: :math:`(L, S)` where L is the target sequence length, S is the source sequence
-          length.
-        Outputs:
-        - attn_output: :math:`(L, N, E)` where L is the target sequence length, N is the batch size,
-          E is the embedding dimension.
-        - attn_output_weights: :math:`(N, L, S)` where N is the batch size,
-          L is the target sequence length, S is the source sequence length.
+        Args:
+            query, key, value: map a query and a set of key-value pairs to an output.
+                See "Attention Is All You Need" for more details.
+            key_padding_mask: if provided, specified padding elements in the key will
+                be ignored by the attention. This is an binary mask. When the value is True,
+                the corresponding value on the attention layer will be filled with -inf.
+            need_weights: output attn_output_weights.
+            attn_mask: mask that prevents attention to certain positions. This is an additive mask
+                (i.e. the values will be added to the attention layer).
+        Shape:
+            Inputs:
+            - query: :math:`(L, N, E)` where L is the target sequence length, N is the batch size,
+                E is the embedding dimension.
+            - key: :math:`(S, N, E)`, where S is the source sequence length, N is the batch size,
+                E is the embedding dimension.
+            - value: :math:`(S, N, E)` where S is the source sequence length, N is the batch size,
+                E is the embedding dimension.
+            - key_padding_mask: :math:`(N, S)`, ByteTensor, where N is the batch size,
+                S is the source sequence length.
+            - attn_mask: :math:`(L, S)` where L is the target sequence length,
+                S is the source sequence length.
+            Outputs:
+            - attn_output: :math:`(L, N, E)` where L is the target sequence length,
+                N is the batch size, E is the embedding dimension.
+            - attn_output_weights: :math:`(N, L, S)` where N is the batch size,
+                L is the target sequence length, S is the source sequence length.
         """
         if self._qkv_same_embed_dim:
             return sparse_multi_head_attention_forward(

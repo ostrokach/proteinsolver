@@ -58,7 +58,7 @@ class ProteinSolverThread(threading.Thread):
         with self._run_condition:
             self.data = data
             self.data.x = torch.tensor(
-                [AMINO_ACID_TO_IDX[aa] for aa in global_state.target_sequence], dtype=torch.long,
+                [AMINO_ACID_TO_IDX[aa] for aa in global_state.target_sequence], dtype=torch.long
             )
             self.num_designs = num_designs
             self._start_new_design = True
@@ -246,7 +246,7 @@ def create_sequence_generation_widget():
         ),
     )
     right_panel = widgets.VBox(
-        [progress_bar, msa_view], layout=widgets.Layout(width="auto", flex="1 1 auto"),
+        [progress_bar, msa_view], layout=widgets.Layout(width="auto", flex="1 1 auto")
     )
 
     return widgets.HBox([left_panel, right_panel], layout=widgets.Layout(flex_flow="row nowrap"))

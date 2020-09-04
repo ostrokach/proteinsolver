@@ -61,7 +61,7 @@ def create_target_selection_widget():
         target_sequence_dropdowns.append(dropdown)
 
     target_sequence_dropdowns_wg = widgets.HBox(
-        target_sequence_dropdowns, layout=widgets.Layout(width="100%", flex_flow="row wrap"),
+        target_sequence_dropdowns, layout=widgets.Layout(width="100%", flex_flow="row wrap")
     )
 
     accordion = widgets.Accordion(
