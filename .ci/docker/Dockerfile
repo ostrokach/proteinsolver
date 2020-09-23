@@ -28,17 +28,14 @@ WORKDIR /home/${USER_NAME}
 
 USER ${USER_NAME}:${GROUP_NAME}
 
-COPY entrypoint.sh favicon.ico /
-
 RUN JUPYTER_DATA_DIR=$(/env/bin/python -m jupyter --data-dir) \
     && mkdir -p ${JUPYTER_DATA_DIR}/voila/templates/mytemplate \
     && cp -r /env/share/jupyter/voila/templates/default/nbconvert_templates ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/ \
     && cp -r /env/share/jupyter/voila/templates/default/templates ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/ \
-    && export google_analytics_tag='<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72981430-5"></script>\n<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "UA-72981430-5");</script>\n{%- endblock html_head_css -%}' \
+    && google_analytics_tag='<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72981430-5"></script>\n<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "UA-72981430-5");</script>\n{%- endblock html_head_css -%}' \
     && sed -i "s@{%- endblock html_head_css -%}@${google_analytics_tag}@" ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/nbconvert_templates/voila.tpl \
-    && mkdir ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/files \
-    && echo "hello world" >> ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static/hello.txt \
-    && mv /favicon.ico ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/files/
+    && mkdir ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static \
+    && echo "hello world" >> ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static/hello.txt
 
 RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/${PS_VERSION}/proteinsolver-${PS_VERSION}.tar.gz -O \
     && tar -xzf proteinsolver-${PS_VERSION}.tar.gz \
@@ -47,11 +44,14 @@ RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/${PS_VERSION}/
     && cd proteinsolver \
     && wget -q -r -nH --cut-dirs 1 --reject "index.html*" "http://models.proteinsolver.org/v0.1/"
 
+COPY favicon.ico proteinsolver/notebooks/
+
 RUN /bin/bash -c '\
     source /env/bin/activate \
     && python -m pip install -q --no-use-pep517 -e proteinsolver \
     && source deactivate'
 
+COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD voila --no-browser --ExecutePreprocessor.timeout=3600 --TagRemovePreprocessor.enabled=True --TagRemovePreprocessor.remove_cell_tags='{"hide"}' --template=mytemplate --Voila.ip=0.0.0.0 --port=${PORT} ${NOTEBOOK_PATH}
+CMD voila --no-browser --ExecutePreprocessor.timeout=3600 --TagRemovePreprocessor.enabled=True --TagRemovePreprocessor.remove_cell_tags='{"hide"}' --VoilaConfiguration.file_whitelist="['favicon.ico']" --template=mytemplate --Voila.ip=0.0.0.0 --port=${PORT} ${NOTEBOOK_PATH}
