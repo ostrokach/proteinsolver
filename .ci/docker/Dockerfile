@@ -32,8 +32,9 @@ RUN JUPYTER_DATA_DIR=$(/env/bin/python -m jupyter --data-dir) \
     && mkdir -p ${JUPYTER_DATA_DIR}/voila/templates/mytemplate \
     && cp -r /env/share/jupyter/voila/templates/default/nbconvert_templates ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/ \
     && cp -r /env/share/jupyter/voila/templates/default/templates ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/ \
-    && mkdir ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static \
-    && echo "hello world" >> ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static/hello.txt
+    && export google_analytics_tag='<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72981430-5"></script>\n<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "UA-72981430-5");</script>\n{%- endblock html_head_css -%}' \
+    && sed -i "s@{%- endblock html_head_css -%}@${google_analytics_tag}@" ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/nbconvert_templates/voila.tpl \
+    && mkdir ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/static ${JUPYTER_DATA_DIR}/voila/templates/mytemplate/files \
 
 RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/${PS_VERSION}/proteinsolver-${PS_VERSION}.tar.gz -O \
     && tar -xzf proteinsolver-${PS_VERSION}.tar.gz \
