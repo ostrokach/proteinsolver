@@ -153,7 +153,9 @@ html_theme = "msmb_theme"
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {}  # type: ignore
+html_theme_options = {
+    "analytics_id": "UA-72981430-5",
+}
 
 # Context is a dictionary passed to the templating engine.
 html_context = {"versions_json_url": "https://docs.proteinsolver.org/versions.json"}
