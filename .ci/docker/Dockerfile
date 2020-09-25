@@ -49,6 +49,7 @@ COPY favicon.ico 1n5uA03-distance-matrix.txt proteinsolver/notebooks/
 RUN /bin/bash -c '\
     source /env/bin/activate \
     && python -m pip install -q --no-use-pep517 -e proteinsolver \
+    && pip install --upgrade sentry-sdk \
     && source deactivate'
 
 COPY entrypoint.sh /
