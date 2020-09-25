@@ -54,4 +54,4 @@ RUN /bin/bash -c '\
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD voila --no-browser --ExecutePreprocessor.timeout=3600 --TagRemovePreprocessor.enabled=True --TagRemovePreprocessor.remove_cell_tags='{"hide"}' --VoilaConfiguration.file_whitelist="['favicon.ico']" --template=mytemplate --Voila.ip=0.0.0.0 --port=${PORT} ${NOTEBOOK_PATH}
+CMD voila --no-browser --ExecutePreprocessor.timeout=3600 --TagRemovePreprocessor.enabled=True --TagRemovePreprocessor.remove_cell_tags='{"hide"}' --VoilaConfiguration.file_whitelist="['favicon.ico', '1n5uA03-distance-matrix.txt']" --template=mytemplate --Voila.ip=0.0.0.0 --port=${PORT} ${NOTEBOOK_PATH}
