@@ -5,8 +5,6 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import torch_geometric
 from kmbio import PDB
 
-import proteinsolver.utils
-
 
 @dataclass
 class GlobalState:

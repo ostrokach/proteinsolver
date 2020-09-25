@@ -6,10 +6,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import torch_geometric
+from IPython.display import clear_output, display
 from ipywidgets import Button, FileUpload, HBox, Layout
 from kmbio import PDB
 from kmtools import structure_tools
-from IPython.display import display, clear_output
 
 import proteinsolver
 from proteinsolver.dashboard import (
