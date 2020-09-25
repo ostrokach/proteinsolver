@@ -1,6 +1,6 @@
 FROM nvidia/cuda:10.1-runtime-ubuntu18.04
 
-ARG PS_VERSION=v0.1.21
+ARG PS_VERSION=a520ace9996dd5420bf125a5ab262df42c8ce99c
 
 RUN apt-get -qq update \
     && apt-get -y -qq install \
@@ -44,7 +44,7 @@ RUN curl -sS https://gitlab.com/ostrokach/proteinsolver/-/archive/${PS_VERSION}/
     && cd proteinsolver \
     && wget -q -r -nH --cut-dirs 1 --reject "index.html*" "http://models.proteinsolver.org/v0.1/"
 
-COPY favicon.ico proteinsolver/notebooks/
+COPY favicon.ico 1n5uA03-distance-matrix.txt proteinsolver/notebooks/
 
 RUN /bin/bash -c '\
     source /env/bin/activate \
