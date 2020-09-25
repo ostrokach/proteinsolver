@@ -53,11 +53,11 @@ def load_distance_matrix(distance_matrix: str):
         line = line.strip()
         if not line or line.startswith("#"):
             continue
-        if line.startswith("N: "):
-            row = re.split(" +", line)
+        if line.startswith("N:"):
+            row = re.split(": *", line)
             num_residues = int(row[1])
         else:
-            row = re.split(" +", line)
+            row = re.split(", *", line)
             residue_idx_1, residue_idx_2, distance = int(row[0]), int(row[1]), float(row[2])
             if residue_idx_1 == residue_idx_2:
                 continue
@@ -132,12 +132,19 @@ def update_displayed_distance_matrix(distance_matrix_out):
 
     with distance_matrix_out:
         clear_output()
-        display(fig)
+        display(fig, display_id="distance-matrix")
 
 
 def create_load_structure_button(
     ngl_stage, distance_matrix_out, target_selection_out, sequence_generation_out
 ):
+    uploader = FileUpload(
+        description="Load structure",
+        accept=".pdb,.cif,.mmcif",
+        multiple=False,
+        layout=Layout(width="11rem"),
+    )
+
     def handle_upload(change):
         # Keep only the last file (there must be a better way!)
         last_item = list(change["new"].values())[-1]
@@ -161,19 +168,23 @@ def create_load_structure_button(
         update_displayed_structure(ngl_stage)
         update_displayed_distance_matrix(distance_matrix_out)
 
-    uploader = FileUpload(
-        description="Load structure",
-        accept=".pdb,.cif,.mmcif",
-        multiple=False,
-        layout=Layout(width="11rem"),
-    )
+        uploader.value.clear()
+        uploader._counter = 0
+
     uploader.observe(handle_upload, names="value")
     return uploader
 
 
 def create_load_distance_matrix_button(
-    distance_matrix_out, target_selection_out, sequence_generation_out
+    ngl_stage, distance_matrix_out, target_selection_out, sequence_generation_out
 ):
+    uploader = FileUpload(
+        description="Load distance matrix",
+        accept=".txt",
+        multiple=False,
+        layout=Layout(width="11rem"),
+    )
+
     def handle_upload(change):
         # Keep only the last file (there must be a better way!)
         last_item = list(change["new"].values())[-1]
@@ -185,14 +196,12 @@ def create_load_distance_matrix_button(
 
         update_target_selection(target_selection_out)
         update_sequence_generation(sequence_generation_out)
+        update_displayed_structure(ngl_stage)
         update_displayed_distance_matrix(distance_matrix_out)
 
-    uploader = FileUpload(
-        description="Load distance matrix",
-        accept=".txt",
-        multiple=False,
-        layout=Layout(width="11rem"),
-    )
+        uploader.value.clear()
+        uploader._counter = 0
+
     uploader.observe(handle_upload, names="value")
     return uploader
 
