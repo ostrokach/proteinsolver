@@ -5,6 +5,8 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import torch_geometric
 from kmbio import PDB
 
+import proteinsolver.utils
+
 
 @dataclass
 class GlobalState:
@@ -15,6 +17,7 @@ class GlobalState:
     # Extract data from structure
     reference_sequence: List[str]
     target_sequence: List[str]
+    tdata: Optional[torch_geometric.data.Data]
     data: Optional[torch_geometric.data.Data]
     structure: Optional[PDB.Structure]
     # Generate new sequences
@@ -30,6 +33,7 @@ class GlobalState:
         "net_kwargs",
         "reference_sequence",
         "target_sequence",
+        "tdata",
         "data",
         "structure",
         "proteinsolver_process",
@@ -40,4 +44,4 @@ class GlobalState:
     )
 
 
-global_state = GlobalState(None, None, {}, [], [], None, None, None, [], None, False)
+global_state = GlobalState(None, None, {}, [], [], None, None, None, None, [], None, False)
