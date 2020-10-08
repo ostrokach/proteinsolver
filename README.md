@@ -1,11 +1,11 @@
 # ProteinSolver
 
-[![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.23)
-[![docs](https://img.shields.io/badge/docs-v0.1.23-blue.svg)](https://ostrokach.gitlab.io/proteinsolver/v0.1.23/)
+[![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.24)
+[![docs](https://img.shields.io/badge/docs-v0.1.24-blue.svg)](https://ostrokach.gitlab.io/proteinsolver/v0.1.24/)
 [![poster](https://img.shields.io/static/v1?label=poster&message=html&color=orange)](https://ostrokach-posters.gitlab.io/2019-12-13-neurips-poster/7ad67cfdf35a4e3e8346e293dc444074/)
 [![conda](https://img.shields.io/conda/dn/ostrokach-forge/proteinsolver.svg)](https://anaconda.org/ostrokach-forge/proteinsolver/)
-[![pipeline status](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.23/pipeline.svg)](https://gitlab.com/ostrokach/proteinsolver/commits/v0.1.23/)
-[![coverage report](https://gitlab.com/ostrokach/proteinsolver/badges/master/coverage.svg?job=docs)](https://ostrokach.gitlab.io/proteinsolver/v0.1.23/htmlcov/)
+[![pipeline status](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.24/pipeline.svg)](https://gitlab.com/ostrokach/proteinsolver/commits/v0.1.24/)
+[![coverage report](https://gitlab.com/ostrokach/proteinsolver/badges/master/coverage.svg?job=docs)](https://ostrokach.gitlab.io/proteinsolver/v0.1.24/htmlcov/)
 
 ## Description
 
@@ -17,10 +17,10 @@ The following notebooks can be used to explore the basic functionality of `prote
 
 | Notebook name               | MyBinder                                                                                                                                                                                                                        | Description                                                                                                                                                                                |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `20_sudoku_demo.ipynb`      | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.23?filepath=proteinsolver%2Fnotebooks%2F20_sudoku_demo.ipynb)      | Use a pre-trained network to solve a single Sudoku puzzle.                                                                                                                                 |
-| `06_sudoku_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.23?filepath=proteinsolver%2Fnotebooks%2F06_sudoku_analysis.ipynb)  | Evaluate a network trained to solve Sudoku puzzles using the validation<br>and test datasets.<br>_(This notebook is resource-intensive and is best ran on a machine with a GPU)._          |
-| `20_protein_demo.ipynb`     | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.23?filepath=proteinsolver%2Fnotebooks%2F20_protein_demo.ipynb)     | Use a pre-trained network to design sequences for a single protein geometry.                                                                                                               |
-| `06_protein_analysis.ipynb` | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.23?filepath=proteinsolver%2Fnotebooks%2F06_protein_analysis.ipynb) | Evaluate a network trained to reconstruct protein sequences using the<br>validation and test datasets.<br>_(This notebook is resource-intensive and is best ran on a machine with a GPU)._ |
+| `20_sudoku_demo.ipynb`      | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.24?filepath=proteinsolver%2Fnotebooks%2F20_sudoku_demo.ipynb)      | Use a pre-trained network to solve a single Sudoku puzzle.                                                                                                                                 |
+| `06_sudoku_analysis.ipynb`  | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.24?filepath=proteinsolver%2Fnotebooks%2F06_sudoku_analysis.ipynb)  | Evaluate a network trained to solve Sudoku puzzles using the validation<br>and test datasets.<br>_(This notebook is resource-intensive and is best ran on a machine with a GPU)._          |
+| `20_protein_demo.ipynb`     | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.24?filepath=proteinsolver%2Fnotebooks%2F20_protein_demo.ipynb)     | Use a pre-trained network to design sequences for a single protein geometry.                                                                                                               |
+| `06_protein_analysis.ipynb` | [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.24?filepath=proteinsolver%2Fnotebooks%2F06_protein_analysis.ipynb) | Evaluate a network trained to reconstruct protein sequences using the<br>validation and test datasets.<br>_(This notebook is resource-intensive and is best ran on a machine with a GPU)._ |
 
 Other notebooks in the `notebooks/` directory show how to perform more extensive validations of the networks and how to train new networks.
 
@@ -31,7 +31,7 @@ Docker images with all required dependencies are provided at: <https://gitlab.co
 To evaluate a proteinsolver network from a Jupyter notebook, we can run the following:
 
 ```bash
-docker run -it --rm -p 8000:8000 registry.gitlab.com/ostrokach/proteinsolver:v0.1.23 jupyter notebook --ip 0.0.0.0 --port 8000
+docker run -it --rm -p 8000:8000 registry.gitlab.com/ostrokach/proteinsolver:v0.1.24 jupyter notebook --ip 0.0.0.0 --port 8000
 ```
 
 ## Installation
