@@ -86,7 +86,7 @@ test:
     # Create conda environment for testing
     - conda update -yq conda
     - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
-      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} pytest pytest-cov || true
+      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} torch-geometric pytest pytest-cov || true
     - source activate test
     # Run tests
     - PKG_INSTALL_DIR=$(python -c "import proteinsolver; print(proteinsolver.__path__[0])")
@@ -116,7 +116,7 @@ docs:
     # Create conda environment for testing
     - conda update -yq conda
     - conda create -n test -q -c file://${CI_PROJECT_DIR}/conda-bld --strict-channel-priority
-      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} nbconvert ipython ipykernel pandoc || true
+      "python=${PYTHON_VERSION}" ${CI_PROJECT_NAME} torch-geometric nbconvert ipython ipykernel pandoc || true
     - source activate test
     - pip install -q sphinx sphinx_rtd_theme msmb_theme recommonmark sphinx-markdown-tables
       nbsphinx coverage
