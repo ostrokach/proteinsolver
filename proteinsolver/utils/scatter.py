@@ -2,7 +2,7 @@ import torch_geometric
 import torch_scatter
 
 
-def scatter_(name, src, index, dim_size=None):
+def scatter_(name, src, index, out=None, dim=0, dim_size=None):
     r"""Aggregates all values from the :attr:`src` tensor at the indices
     specified in the :attr:`index` tensor along the first dimension.
     If multiple indices reference the same location, their contributions
@@ -24,7 +24,7 @@ def scatter_(name, src, index, dim_size=None):
 
     :rtype: :class:`Tensor`
     """
-    out = torch_scatter.scatter(src, index, 0, None, dim_size=dim_size, reduce=name)
+    out = torch_scatter.scatter(src, index, out=None, dim=dim, dim_size=dim_size, reduce=name)
     return out
 
 

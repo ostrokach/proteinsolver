@@ -1,6 +1,7 @@
 import pytest
 import torch
 import torch.nn as nn
+import proteinsolver  # noqa
 from torch_geometric.utils import dense_to_sparse, scatter_
 
 from proteinsolver.nn import functional as F2
