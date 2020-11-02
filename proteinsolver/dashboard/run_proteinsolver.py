@@ -49,18 +49,20 @@ class ProteinSolverThread(threading.Thread):
 
         self.data = None
         self.num_designs = None
+        self.temperature = None
 
         self._run_condition = threading.Condition()
         self._start_new_design = False
         self._cancel_event = threading.Event()
 
-    def start_new_design(self, data, num_designs) -> None:
+    def start_new_design(self, data, num_designs, temperature) -> None:
         with self._run_condition:
             self.data = data
             self.data.x = torch.tensor(
                 [AMINO_ACID_TO_IDX[aa] for aa in global_state.target_sequence], dtype=torch.long
             )
             self.num_designs = num_designs
+            self.temperature = temperature
             self._start_new_design = True
             self._cancel_event.clear()
             assert not self.cancelled()
@@ -85,6 +87,7 @@ class ProteinSolverThread(threading.Thread):
                     state_file=global_state.state_file,
                     data=self.data,
                     num_designs=self.num_designs,
+                    temperature=self.temperature,
                     net_kwargs=global_state.net_kwargs,
                 )
                 proc.start()
@@ -154,12 +157,12 @@ def update_run_ps_button_state(run_ps_button: widgets.Button, state: State):
     run_ps_button.tooltip = button_states[state]["tooltip"]
 
 
-def on_run_ps_button_clicked(run_ps_button, num_designs_field):
+def on_run_ps_button_clicked(run_ps_button, num_designs_field, temperature_factor_field):
     if run_ps_button.description == button_states[State.ENABLED]["description"]:
         update_run_ps_button_state(run_ps_button, State.DISABLED)
         global_state.proteinsolver_thread.cancel()
         global_state.proteinsolver_thread.start_new_design(
-            global_state.data, num_designs_field.value
+            global_state.data, num_designs_field.value, temperature_factor_field.value
         )
     else:
         assert run_ps_button.description == button_states[State.DISABLED]["description"]
@@ -189,15 +192,28 @@ def create_sequence_generation_widget():
         min=1,
         max=20_000,
         step=1,
-        description="Number of sequences:",
         disabled=False,
-        style={"description_width": "initial"},
-        layout=widgets.Layout(width="auto"),
+        layout=widgets.Layout(width="100px"),
+    )
+
+    temperature_factor_field = widgets.BoundedFloatText(
+        value=1.0,
+        min=0.0001,
+        max=100.0,
+        step=0.0001,
+        disabled=False,
+        layout=widgets.Layout(width="95px"),
     )
 
     run_ps_button = widgets.Button(layout=widgets.Layout(width="auto"))
     update_run_ps_button_state(run_ps_button, State.ENABLED)
-    run_ps_button.on_click(partial(on_run_ps_button_clicked, num_designs_field=num_designs_field))
+    run_ps_button.on_click(
+        partial(
+            on_run_ps_button_clicked,
+            num_designs_field=num_designs_field,
+            temperature_factor_field=temperature_factor_field,
+        )
+    )
 
     run_ps_status_out = widgets.Output(layout=widgets.Layout(height="75px"))
 
@@ -232,7 +248,23 @@ def create_sequence_generation_widget():
 
     left_panel = widgets.VBox(
         [
-            widgets.VBox([num_designs_field, run_ps_button]),
+            widgets.VBox(
+                [
+                    widgets.HBox(
+                        [
+                            widgets.Label("Number of sequences:", layout={"width": "145px"}),
+                            num_designs_field,
+                        ]
+                    ),
+                    widgets.HBox(
+                        [
+                            widgets.Label("Temperature factor:", layout={"width": "145px"}),
+                            temperature_factor_field,
+                        ]
+                    ),
+                    run_ps_button,
+                ]
+            ),
             run_ps_status_out,
             gpu_utilization_widget,
             gpu_status_out,

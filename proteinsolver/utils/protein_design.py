@@ -114,6 +114,7 @@ def design_sequence(
     random_position: bool = False,
     value_selection_strategy: str = "map",
     num_categories: int = None,
+    temperature: float = 1.0,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Generate new sequences.
 
@@ -156,7 +157,15 @@ def design_sequence(
             chosen_category,
             chosen_category_proba,
         ) in _select_residue_for_position(
-            net, x, x_ref, data, batch_size, mask_filled, random_position, "ref"
+            net,
+            x,
+            x_ref,
+            data,
+            batch_size,
+            mask_filled,
+            random_position,
+            "ref",
+            temperature=temperature,
         ):
             assert chosen_category != num_categories
             assert x[max_proba_index] == num_categories
@@ -174,7 +183,15 @@ def design_sequence(
             chosen_category,
             chosen_category_proba,
         ) in _select_residue_for_position(
-            net, x, x_ref, data, batch_size, mask_empty, random_position, value_selection_strategy
+            net,
+            x,
+            x_ref,
+            data,
+            batch_size,
+            mask_empty,
+            random_position,
+            value_selection_strategy,
+            temperature=temperature,
         ):
             assert chosen_category != num_categories
             assert x[max_proba_index] == num_categories
@@ -187,12 +204,21 @@ def design_sequence(
 
 
 def _select_residue_for_position(
-    net, x, x_ref, data, batch_size, mask_ref, random_position, value_selection_strategy
+    net,
+    x,
+    x_ref,
+    data,
+    batch_size,
+    mask_ref,
+    random_position,
+    value_selection_strategy,
+    temperature=1.0,
 ):
     """Predict a new residue for an unassigned position for each batch in `batch_size`."""
     assert value_selection_strategy in ("map", "multinomial", "ref")
 
     output = net(x, data.edge_index, data.edge_attr)
+    output = output / temperature
     output_proba_ref = torch.softmax(output, dim=1)
     output_proba_max_ref, _ = output_proba_ref.max(dim=1)
     index_array_ref = torch.arange(x.size(0))

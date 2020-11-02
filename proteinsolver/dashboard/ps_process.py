@@ -14,7 +14,7 @@ ctx = mp.get_context("spawn")
 
 
 class ProteinSolverProcess(ctx.Process):  # type: ignore
-    def __init__(self, net_class, state_file, data, num_designs, net_kwargs=None):
+    def __init__(self, net_class, state_file, data, num_designs, temperature=1.0, net_kwargs=None):
         super().__init__(daemon=True)
         self.net_class = net_class
         self.state_file = state_file
@@ -23,6 +23,7 @@ class ProteinSolverProcess(ctx.Process):  # type: ignore
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.data = data
         self.num_designs = num_designs
+        self.temperature = temperature
         self._cancel_event = ctx.Event()
 
     def run(self) -> None:
@@ -40,7 +41,11 @@ class ProteinSolverProcess(ctx.Process):  # type: ignore
                 return
 
             x, x_proba = design_sequence(
-                net, data, value_selection_strategy="multinomial", num_categories=20
+                net,
+                data,
+                value_selection_strategy="multinomial",
+                num_categories=20,
+                temperature=self.temperature,
             )
             sum_proba = x_proba.mean().item()
             sum_logproba = x_proba.log().mean().item()
