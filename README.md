@@ -1,9 +1,10 @@
 # ProteinSolver
 
+[![gitlab](https://img.shields.io/badge/GitLab-main-orange?logo=gitlab)](https://gitlab.com/ostrokach/proteinsolver)
+[![docs](https://img.shields.io/badge/docs-v0.1.25-blue.svg?logo=gitbook)](https://ostrokach.gitlab.io/proteinsolver/v0.1.25/)
+[![poster](https://img.shields.io/static/v1?label=poster&message=html&color=yellow&logo=reveal.js)](https://ostrokach-posters.gitlab.io/2019-12-13-neurips-poster/7ad67cfdf35a4e3e8346e293dc444074/)
 [![binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fmybinder%3AhTGKLsjmxRS8xNyHxRJB%40gitlab.com%2Fostrokach%2Fproteinsolver.git/v0.1.25)
-[![docs](https://img.shields.io/badge/docs-v0.1.25-blue.svg)](https://ostrokach.gitlab.io/proteinsolver/v0.1.25/)
-[![poster](https://img.shields.io/static/v1?label=poster&message=html&color=orange)](https://ostrokach-posters.gitlab.io/2019-12-13-neurips-poster/7ad67cfdf35a4e3e8346e293dc444074/)
-[![conda](https://img.shields.io/conda/dn/ostrokach-forge/proteinsolver.svg)](https://anaconda.org/ostrokach-forge/proteinsolver/)
+[![conda](https://img.shields.io/conda/dn/ostrokach-forge/proteinsolver.svg?logo=conda-forge)](https://anaconda.org/ostrokach-forge/proteinsolver/)
 [![pipeline status](https://gitlab.com/ostrokach/proteinsolver/badges/v0.1.25/pipeline.svg)](https://gitlab.com/ostrokach/proteinsolver/commits/v0.1.25/)
 [![coverage report](https://gitlab.com/ostrokach/proteinsolver/badges/master/coverage.svg?job=docs)](https://ostrokach.gitlab.io/proteinsolver/v0.1.25/htmlcov/)
 
