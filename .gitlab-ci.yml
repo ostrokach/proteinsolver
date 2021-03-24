@@ -13,7 +13,7 @@ stages:
 
 variables:
   PACKAGE_VERSION: "0.1.25"
-  PYTHON_VERSION: "3.7"
+  PYTHON_VERSION: "3.8"
 
 # === Configurations ===
 
@@ -70,7 +70,7 @@ build:
     - >
       conda build .
       --variant-config-files /opt/conda/conda_build_config.yaml
-      --variants "{python: [$PYTHON_VERSION], numpy: [1.16], python_impl: [cpython]}"
+      --variants "{python: [${PYTHON_VERSION}], numpy: [1.16], python_impl: [cpython]}"
       --no-test
       --output-folder "$CI_PROJECT_DIR/conda-bld"
   artifacts:
