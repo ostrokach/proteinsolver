@@ -68,6 +68,8 @@ Pre-trained models can be downloaded using `wget` by running the following comma
 wget -r -nH --cut-dirs 1 --reject "index.html*" "http://models.proteinsolver.org/v0.1/"
 ```
 
+For an example of how to use a pretrained ProteinSolver models in downstream applications (such as mutation ΔΔG prediction), see the [`elaspic/elaspic2`](https://gitlab.com/elaspic/elaspic2) repository, and in particular the [`src/elaspic2/plugins/proteinsolver`](https://gitlab.com/elaspic/elaspic2/-/tree/master/src/elaspic2/plugins/proteinsolver) module.
+
 ## Training and validation datasets
 
 Data used to train and validate the "proteinsolver" network to solve Sudoku puzzles and reconstruct protein sequences can be downloaded from <http://deep-protein-gen.data.proteinsolver.org/>:
@@ -75,6 +77,8 @@ Data used to train and validate the "proteinsolver" network to solve Sudoku puzz
 ```bash
 wget -r -nH --reject "index.html*" "http://deep-protein-gen.data.proteinsolver.org/"
 ```
+
+The generation of the training and validation datasets was carried out in our predecessor project: [`ostrokach/protein-adjacency-net`](https://gitlab.com/ostrokach/protein-adjacency-net).
 
 ## Environment variables
 
